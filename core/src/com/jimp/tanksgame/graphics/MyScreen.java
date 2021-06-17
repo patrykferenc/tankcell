@@ -7,13 +7,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.jimp.tanksgame.TanksGame;
 
 public abstract class MyScreen implements Screen {
-    
+
     private final TanksGame myGame;
     private final Stage uiStage;
     private final Skin uiSkin;
     private final TextureRegion background;
 
-    protected MyScreen(TanksGame game) {
+    protected MyScreen(final TanksGame game) {
         myGame = game;
         uiStage = new Stage();
         uiSkin = Resources.getInstance().getUiSkin();
@@ -21,6 +21,10 @@ public abstract class MyScreen implements Screen {
     }
 
     public abstract void setupUI();
+
+    public void disposeScreen() {
+        uiStage.dispose();
+    }
 
     public TanksGame getMyGame() {
         return myGame;

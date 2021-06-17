@@ -1,66 +1,55 @@
 package com.jimp.tanksgame.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.jimp.tanksgame.TanksGame;
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends MyScreen {
 
-    private final TanksGame myGame;
-
-    private final Skin uiSkin;
-    private final Stage uiStage;
-
-    private final TextureRegion background;
     private final Sprite title;
 
     public MainMenuScreen(final TanksGame game) {
-        this.myGame = game;
-
-        uiSkin = new Skin(Gdx.files.internal("skin/skin.json"));
-        background = Resources.getInstance().getBackground();
+        super(game);
+        setupUI();
         title = new Sprite(Resources.getInstance().getTitle());
         title.setSize(640, 96);
         title.setCenter(ScreenProperties.WIDTH / 2f, 800f);
+    }
 
-        uiStage = new Stage();
+    @Override
+    public void setupUI() {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
+        getUiStage().addActor(uiTable);
 
-        uiStage.addActor(uiTable);
-
-        TextButton newGame = new TextButton("New game", uiSkin);
-        TextButton settings = new TextButton("Settings", uiSkin);
-        TextButton quit = new TextButton("Quit", uiSkin);
+        TextButton newGame = new TextButton("New game", getUiSkin());
+        TextButton settings = new TextButton("Settings", getUiSkin());
+        TextButton quit = new TextButton("Quit", getUiSkin());
         uiTable.add(newGame).height(100).width(200).center();
         uiTable.row();
         uiTable.add(settings).height(100).width(200).center();
         uiTable.row();
         uiTable.add(quit).height(100).width(200).center();
 
-        uiStage.addActor(uiTable);
-        Gdx.input.setInputProcessor(uiStage);
+        getUiStage().addActor(uiTable);
 
+        Gdx.input.setInputProcessor(getUiStage());
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                myGame.setScreen(new GameScreen(myGame));
+                getMyGame().setScreen(new GameScreen(getMyGame()));
                 dispose();
             }
         });
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                myGame.setScreen(new SettingsScreen(myGame));
+                getMyGame().setScreen(new SettingsScreen(getMyGame()));
                 dispose();
             }
         });
@@ -78,13 +67,13 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        myGame.getMyBatch().begin();
-        myGame.getMyBatch().draw(background, 0, 0, ScreenProperties.WIDTH, ScreenProperties.HEIGHT);
-        title.draw(myGame.getMyBatch());
-        myGame.getMyBatch().end();
+        getMyGame().getMyBatch().begin();
+        getMyGame().getMyBatch().draw(getBackground(), 0, 0, ScreenProperties.WIDTH, ScreenProperties.HEIGHT);
+        title.draw(getMyGame().getMyBatch());
+        getMyGame().getMyBatch().end();
 
-        uiStage.act(Gdx.graphics.getDeltaTime());
-        uiStage.draw();
+        getUiStage().act(Gdx.graphics.getDeltaTime());
+        getUiStage().draw();
     }
 
     @Override
@@ -109,8 +98,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        uiStage.dispose();
-        uiSkin.dispose();
+        disposeScreen();
     }
 
 }
