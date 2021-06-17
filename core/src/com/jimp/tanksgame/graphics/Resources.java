@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Resources {
     private Sprite grass;
     private Sprite dirt;
     private List<Sprite> numbers;
+    private Skin uiSkin = new Skin(Gdx.files.internal("skin/skin.json"));
 
     private Resources() {
         reInit();
@@ -42,6 +44,9 @@ public class Resources {
 
     private void reInit() {
         dispose();
+
+        uiSkin = new Skin(Gdx.files.internal("skin/skin.json"));
+
         atlas = new TextureAtlas(Gdx.files.internal("textures.atlas"));
         whitePixelTexture = atlas.findRegion("white_pixel");
 
@@ -67,6 +72,11 @@ public class Resources {
 
     public void dispose() {
         atlas.dispose();
+        uiSkin.dispose();
+    }
+
+    public Skin getUiSkin() {
+        return uiSkin;
     }
 
     public TextureRegion getWhitePixelTexture() {
