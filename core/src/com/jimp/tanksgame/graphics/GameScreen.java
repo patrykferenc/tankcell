@@ -1,13 +1,13 @@
 package com.jimp.tanksgame.graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -36,6 +36,8 @@ class GameScreen extends MyScreen {
     private boolean leftPlayerShot;
     private boolean rightPlayerShot;
 
+    private boolean screenshotResult;
+
     public GameScreen(final TanksGame game) {
         super(game);
         setupUI();
@@ -51,7 +53,13 @@ class GameScreen extends MyScreen {
         backgroundSprites = new ArrayList<>((int) ((GAME_BOARD_WIDTH / PLAYER_SPACE) * (GAME_BOARD_HEIGHT / PLAYER_SPACE)));
         prepareBackground();
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        leftPlayerShot = false;
+        rightPlayerShot = false;
+        screenshotResult = false;
+
+        InputMultiplexer myInputMultiplexer = new InputMultiplexer();
+        myInputMultiplexer.addProcessor(getUiStage());
+        myInputMultiplexer.addProcessor(new InputAdapter() {
 
             @Override
             public boolean keyDown(int key) {
@@ -67,7 +75,6 @@ class GameScreen extends MyScreen {
 
             @Override
             public boolean keyUp(int key) {
-
                 if (key == LEFT_PLAYER_SHOOT) {
                     leftPlayerShot = false;
                 }
@@ -78,19 +85,37 @@ class GameScreen extends MyScreen {
                 return false;
             }
         });
+
+        Gdx.input.setInputProcessor(myInputMultiplexer);
     }
 
     @Override
     public void setupUI() {
         Table uiTable = new Table();
         uiTable.setFillParent(true);
-        getUiStage().addActor(uiTable);
-
-
         uiTable.setDebug(true);
+        uiTable.right().top();
+
+        TextButton returnButton = new TextButton("BACK", getUiSkin());
+        CheckBox screenshotButton = new CheckBox("Screenshot?", getUiSkin());
+        uiTable.add(screenshotButton).height(60).width(120).pad(10);
+        uiTable.add(returnButton).height(60).width(120).pad(10);
+
         getUiStage().addActor(uiTable);
 
-        Gdx.input.setInputProcessor(getUiStage());
+        screenshotButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                screenshotResult = !screenshotResult;
+            }
+        });
+        returnButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                getMyGame().setScreen(new MainMenuScreen(getMyGame()));
+                dispose();
+            }
+        });
     }
 
     private void prepareBackground() {
@@ -126,36 +151,31 @@ class GameScreen extends MyScreen {
         switch (myGameBoard.updateGame(lastFrameRenderTime, leftPlayerShot, rightPlayerShot)) {
             case LEFT_WON_TIME:
                 getMyGame().setScreen(new EndGameScreen(getMyGame(), LEFT_WON_TIME));
-                //takeScreenshot();
+                takeScreenshot();
                 dispose();
                 break;
             case RIGHT_WON_TIME:
                 getMyGame().setScreen(new EndGameScreen(getMyGame(), RIGHT_WON_TIME));
-                //takeScreenshot();
+                takeScreenshot();
                 dispose();
                 break;
             case LEFT_WON_BOMB:
                 getMyGame().setScreen(new EndGameScreen(getMyGame(), LEFT_WON_BOMB));
-                //takeScreenshot();
+                takeScreenshot();
                 dispose();
                 break;
             case RIGHT_WON_BOMB:
                 getMyGame().setScreen(new EndGameScreen(getMyGame(), RIGHT_WON_BOMB));
-                //takeScreenshot();
+                takeScreenshot();
                 dispose();
                 break;
             case DRAW:
                 getMyGame().setScreen(new EndGameScreen(getMyGame(), DRAW));
-                //takeScreenshot();
+                takeScreenshot();
                 dispose();
                 break;
             case CONTINUE:
                 break;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            getMyGame().setScreen(new MainMenuScreen(getMyGame()));
-            dispose();
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -183,9 +203,11 @@ class GameScreen extends MyScreen {
     }
 
     private void takeScreenshot() {
-        Pixmap pixmap = Pixmap.createFromFrameBuffer((int) GAME_BOARD_LEFT_EDGE, (int) GAME_BOARD_LOWER_EDGE, GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT);
-        PixmapIO.writePNG(Gdx.files.external("screenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
-        pixmap.dispose();
+        if (screenshotResult) {
+            Pixmap pixmap = Pixmap.createFromFrameBuffer((int) GAME_BOARD_LEFT_EDGE, (int) GAME_BOARD_LOWER_EDGE, GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT);
+            PixmapIO.writePNG(Gdx.files.external("screenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+            pixmap.dispose();
+        }
     }
 
     private void drawGameUI() {
