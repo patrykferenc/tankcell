@@ -3,10 +3,14 @@ package com.jimp.tanksgame.graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.jimp.tanksgame.TanksGame;
 import com.jimp.tanksgame.logic.Drawable;
 import com.jimp.tanksgame.logic.GameBoard;
@@ -21,9 +25,8 @@ import static com.jimp.tanksgame.graphics.ScreenProperties.WIDTH;
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
-class GameScreen implements Screen {
+class GameScreen extends MyScreen {
 
-    private final TanksGame myGame;
     private final OrthographicCamera myCamera;
     private final ShapeDrawer myShapeDrawer;
     private final GameBoard myGameBoard;
@@ -34,15 +37,16 @@ class GameScreen implements Screen {
     private boolean rightPlayerShot;
 
     public GameScreen(final TanksGame game) {
-        myGame = game;
+        super(game);
+        setupUI();
 
         TextureRegion whitePixelRegion = new TextureRegion(Resources.getInstance().getWhitePixelTexture());
-        myShapeDrawer = new ShapeDrawer(myGame.getMyBatch(), whitePixelRegion);
+        myShapeDrawer = new ShapeDrawer(getMyGame().getMyBatch(), whitePixelRegion);
 
         myCamera = new OrthographicCamera();
         myCamera.setToOrtho(false, WIDTH, HEIGHT);
 
-        myGameBoard = new GameBoard(myGame.getMyConfigurator());
+        myGameBoard = new GameBoard(getMyGame().getMyConfigurator());
 
         backgroundSprites = new ArrayList<>((int) ((GAME_BOARD_WIDTH / PLAYER_SPACE) * (GAME_BOARD_HEIGHT / PLAYER_SPACE)));
         prepareBackground();
@@ -74,6 +78,19 @@ class GameScreen implements Screen {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void setupUI() {
+        Table uiTable = new Table();
+        uiTable.setFillParent(true);
+        getUiStage().addActor(uiTable);
+
+
+        uiTable.setDebug(true);
+        getUiStage().addActor(uiTable);
+
+        Gdx.input.setInputProcessor(getUiStage());
     }
 
     private void prepareBackground() {
@@ -108,28 +125,28 @@ class GameScreen implements Screen {
 
         switch (myGameBoard.updateGame(lastFrameRenderTime, leftPlayerShot, rightPlayerShot)) {
             case LEFT_WON_TIME:
-                myGame.setScreen(new EndGameScreen(myGame, LEFT_WON_TIME));
-                takeScreenshot();
+                getMyGame().setScreen(new EndGameScreen(getMyGame(), LEFT_WON_TIME));
+                //takeScreenshot();
                 dispose();
                 break;
             case RIGHT_WON_TIME:
-                myGame.setScreen(new EndGameScreen(myGame, RIGHT_WON_TIME));
-                takeScreenshot();
+                getMyGame().setScreen(new EndGameScreen(getMyGame(), RIGHT_WON_TIME));
+                //takeScreenshot();
                 dispose();
                 break;
             case LEFT_WON_BOMB:
-                myGame.setScreen(new EndGameScreen(myGame, LEFT_WON_BOMB));
-                takeScreenshot();
+                getMyGame().setScreen(new EndGameScreen(getMyGame(), LEFT_WON_BOMB));
+                //takeScreenshot();
                 dispose();
                 break;
             case RIGHT_WON_BOMB:
-                myGame.setScreen(new EndGameScreen(myGame, RIGHT_WON_BOMB));
-                takeScreenshot();
+                getMyGame().setScreen(new EndGameScreen(getMyGame(), RIGHT_WON_BOMB));
+                //takeScreenshot();
                 dispose();
                 break;
             case DRAW:
-                myGame.setScreen(new EndGameScreen(myGame, DRAW));
-                takeScreenshot();
+                getMyGame().setScreen(new EndGameScreen(getMyGame(), DRAW));
+                //takeScreenshot();
                 dispose();
                 break;
             case CONTINUE:
@@ -137,29 +154,32 @@ class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            myGame.setScreen(new MainMenuScreen(myGame));
+            getMyGame().setScreen(new MainMenuScreen(getMyGame()));
             dispose();
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         myCamera.update();
-        myGame.getMyBatch().setProjectionMatrix(myCamera.combined);
+        getMyGame().getMyBatch().setProjectionMatrix(myCamera.combined);
         myShapeDrawer.update();
 
         List<Drawable> myDrawables = myGameBoard.getDrawables();
         for (Drawable myDrawable : myDrawables)
             myDrawable.update();
 
-        myGame.getMyBatch().begin();
+        getMyGame().getMyBatch().begin();
 
         drawGameBoardBackground();
 
         for (Drawable myDrawable : myDrawables)
-            myDrawable.draw(myGame.getMyBatch());
+            myDrawable.draw(getMyGame().getMyBatch());
 
         drawGameUI();
 
-        myGame.getMyBatch().end();
+        getMyGame().getMyBatch().end();
+
+        getUiStage().act(Gdx.graphics.getDeltaTime());
+        getUiStage().draw();
     }
 
     private void takeScreenshot() {
@@ -176,16 +196,16 @@ class GameScreen implements Screen {
         myShapeDrawer.filledRectangle((WIDTH - GAME_BOARD_WIDTH) / 2f, GAME_BOARD_HEIGHT + (HEIGHT - GAME_BOARD_HEIGHT) / 2f, GAME_BOARD_WIDTH, (HEIGHT - GAME_BOARD_HEIGHT) / 2f, uiBackgroundColor);
         myShapeDrawer.rectangle(GAME_BOARD_LEFT_EDGE - 3f, GAME_BOARD_LOWER_EDGE - 3f, GAME_BOARD_WIDTH + 6f, GAME_BOARD_HEIGHT + 6f, Color.DARK_GRAY, 6f);
 
-        myGame.getMyFont().draw(myGame.getMyBatch(), String.valueOf(myGameBoard.getLeftPlayer().getShotBullets().size()), 10, 900);
-        myGame.getMyFont().draw(myGame.getMyBatch(), String.valueOf(myGameBoard.getRightPlayer().getShotBullets().size()), 1800, 900);
-        myGame.getMyFont().draw(myGame.getMyBatch(), "SCORE: " + myGameBoard.getLeftPlayer().getScore(), 160, 40);
-        myGame.getMyFont().draw(myGame.getMyBatch(), "SCORE: " + myGameBoard.getRightPlayer().getScore(), 1600, 40);
-        myGame.getMyFont().draw(myGame.getMyBatch(), myGameBoard.getRemainingMinutes() + ":" + myGameBoard.getRemainingSeconds(), 950, 40);
+        getMyGame().getMyFont().draw(getMyGame().getMyBatch(), String.valueOf(myGameBoard.getLeftPlayer().getShotBullets().size()), 10, 900);
+        getMyGame().getMyFont().draw(getMyGame().getMyBatch(), String.valueOf(myGameBoard.getRightPlayer().getShotBullets().size()), 1800, 900);
+        getMyGame().getMyFont().draw(getMyGame().getMyBatch(), "SCORE: " + myGameBoard.getLeftPlayer().getScore(), 160, 40);
+        getMyGame().getMyFont().draw(getMyGame().getMyBatch(), "SCORE: " + myGameBoard.getRightPlayer().getScore(), 1600, 40);
+        getMyGame().getMyFont().draw(getMyGame().getMyBatch(), myGameBoard.getRemainingMinutes() + ":" + myGameBoard.getRemainingSeconds(), 950, 40);
     }
 
     private void drawGameBoardBackground() {
         for (Sprite sprite : backgroundSprites) {
-            sprite.draw(myGame.getMyBatch());
+            sprite.draw(getMyGame().getMyBatch());
         }
     }
 
@@ -245,6 +265,6 @@ class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        disposeScreen();
     }
 }

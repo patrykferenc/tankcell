@@ -78,7 +78,7 @@ public class SettingsScreen extends MyScreen {
 
     @Override
     public void resize(int width, int height) {
-
+        getUiStage().getViewport().update(width, height, true);
     }
 
     @Override

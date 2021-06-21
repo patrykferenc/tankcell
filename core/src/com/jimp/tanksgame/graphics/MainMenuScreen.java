@@ -30,11 +30,12 @@ public class MainMenuScreen extends MyScreen {
         TextButton newGame = new TextButton("New game", getUiSkin());
         TextButton settings = new TextButton("Settings", getUiSkin());
         TextButton quit = new TextButton("Quit", getUiSkin());
-        uiTable.add(newGame).height(100).width(200).center();
+        uiTable.add(newGame).height(100).width(300).padBottom(10);
         uiTable.row();
-        uiTable.add(settings).height(100).width(200).center();
+        uiTable.add(settings).height(100).width(300).padBottom(10);
         uiTable.row();
-        uiTable.add(quit).height(100).width(200).center();
+        uiTable.add(quit).height(100).width(300).padBottom(10);
+        uiTable.setDebug(true);
 
         getUiStage().addActor(uiTable);
 
@@ -78,6 +79,7 @@ public class MainMenuScreen extends MyScreen {
 
     @Override
     public void resize(int width, int height) {
+        getUiStage().getViewport().update(width, height, true);
     }
 
     @Override
