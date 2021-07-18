@@ -10,8 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
-import static com.jimp.tanksgame.logic.Player.PlayerProperties.LEFT;
-import static com.jimp.tanksgame.logic.Player.PlayerProperties.RIGHT;
+import static com.jimp.tanksgame.logic.Tank.PlayerProperties.*;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public class GameBoard {
