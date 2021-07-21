@@ -6,12 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.jimp.tanksgame.TanksGame;
-import com.jimp.tanksgame.logic.GameSettingsConfigurator;
-
-import java.io.File;
 
 public class SettingsScreen extends MyScreen {
 
@@ -26,15 +22,10 @@ public class SettingsScreen extends MyScreen {
         uiTable.setFillParent(true);
         getUiStage().addActor(uiTable);
 
-        Label title = new Label("Enter absolute path to config", getUiSkin());
+        Label title = new Label("Choose settings you want to use", getUiSkin());
         TextButton back = new TextButton("Back to the menu", getUiSkin());
-        TextButton confirm = new TextButton("OK", getUiSkin());
-        TextField textField = new TextField("path", getUiSkin());
         uiTable.add(title).center();
         uiTable.row().width(200);
-        uiTable.add(textField).height(50).width(150);
-        uiTable.add(confirm).height(50).width(50);
-        uiTable.row();
         uiTable.add(back).height(100).width(200);
         uiTable.row();
 
@@ -45,16 +36,6 @@ public class SettingsScreen extends MyScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 getMyGame().setScreen(new MainMenuScreen(getMyGame()));
                 dispose();
-            }
-        });
-        confirm.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                String path = textField.getText();
-                File file = new File(path);
-                if (file.isFile()) {
-                    getMyGame().setMyConfigurator(new GameSettingsConfigurator(path));
-                }
             }
         });
     }

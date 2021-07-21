@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameSettingsConfiguratorTest {
 
-    @Disabled("dupa")
+    @Disabled("Disabled until the settings are reworked")
     @Test
     void testNormalFile() {
 
@@ -36,7 +36,7 @@ class GameSettingsConfiguratorTest {
         );
     }
 
-    @Disabled("dupa")
+    @Disabled("Disabled until the settings are reworked")
     @Test
     void testBrokenFile_text() {
 
@@ -61,7 +61,7 @@ class GameSettingsConfiguratorTest {
         );
     }
 
-    @Disabled("dupa")
+    @Disabled("Disabled until the settings are reworked")
     @Test
     void testBrokenFile_empty() {
         File testFile = new File("D:\\Documents\\Programowanie\\JIMP2\\projekt\\tanks\\core\\test\\com\\jimp\\tanksgame\\logic\\testResources\\empty.txt");
@@ -86,7 +86,7 @@ class GameSettingsConfiguratorTest {
         );
     }
 
-    @Disabled("dupa")
+    @Disabled("Disabled until the settings are reworked")
     @Test
     void testGoodFile_minAndMaxValues() {
 
@@ -111,7 +111,7 @@ class GameSettingsConfiguratorTest {
         );
     }
 
-    @Disabled("dupa")
+    @Disabled("Disabled until the settings are reworked")
     @Test
     void testBrokenFile_weirdLayout() {
 

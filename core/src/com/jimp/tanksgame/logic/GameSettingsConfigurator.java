@@ -1,9 +1,5 @@
 package com.jimp.tanksgame.logic;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class GameSettingsConfigurator {
 
     private final float bulletVelocity;
@@ -19,6 +15,7 @@ public class GameSettingsConfigurator {
     private final float timeOfPlay;
     private final int maxBullets;
 
+    //those are default values (for now)
     public GameSettingsConfigurator() {
         bulletVelocity = 800f;
         deltaBulletVelocity = 50f;
@@ -31,67 +28,7 @@ public class GameSettingsConfigurator {
         timeToDecreaseSizeAndSpeed = 10f;
         timeToIncreaseCellValues = 5f;
         timeOfPlay = 180f;
-        maxBullets = 9;
-    }
-
-    public GameSettingsConfigurator(String pathToConfig) {
-        String myFileContent = "";
-        try {
-            myFileContent = new String(Files.readAllBytes(Paths.get(pathToConfig)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String[] textValues = myFileContent.split("\\r?\\n");
-        bulletVelocity = checkAndAssignValue(getTextValue(0, textValues), 100f, 10000f, 800f);
-        deltaBulletVelocity = checkAndAssignValue(getTextValue(1, textValues), 0.001f, 1000f, 20f);
-        cellVelocity = checkAndAssignValue(getTextValue(2, textValues), 1f, 1000f, 60f);
-        deltaCellVelocity = checkAndAssignValue(getTextValue(3, textValues), 0.001f, 100f, 2f);
-        bulletRadius = checkAndAssignValue(getTextValue(4, textValues), 2f, 64f, 24f);
-        deltaBulletRadius = checkAndAssignValue(getTextValue(5, textValues), 0.001f, 32f, 1f);
-        cellEdge = checkAndAssignValue(getTextValue(6, textValues), 2f, 200f, 128f);
-        deltaCellEdge = checkAndAssignValue(getTextValue(7, textValues), 0.001f, 100f, 4f);
-        timeToDecreaseSizeAndSpeed = checkAndAssignValue(getTextValue(8, textValues), 0.001f, 1000f, 12f);
-        timeToIncreaseCellValues = checkAndAssignValue(getTextValue(9, textValues), 0.001f, 1000f, 6f);
-        timeOfPlay = checkAndAssignValue(getTextValue(10, textValues), 2f, 2000f, 180f);
-        maxBullets = checkAndAssignValue(getTextValue(11, textValues), 1, 20, 9);
-    }
-
-    private float checkAndAssignValue(String stringToConvert, float minValue, float maxValue, float defaultValue) {
-        float value;
-        if (stringToConvert != null) {
-            try {
-                value = Float.parseFloat(stringToConvert);
-                value = (value < minValue || value > maxValue) ? defaultValue : value;
-            } catch (NumberFormatException exception) {
-                value = defaultValue;
-            }
-        } else
-            value = defaultValue;
-        return value;
-    }
-
-    private int checkAndAssignValue(String stringToConvert, int minValue, int maxValue, int defaultValue) {
-        int value;
-        if (stringToConvert != null) {
-            try {
-                value = Integer.parseInt(stringToConvert);
-                value = (value < minValue || value > maxValue) ? defaultValue : value;
-            } catch (NumberFormatException exception) {
-                value = defaultValue;
-            }
-        } else
-            value = defaultValue;
-        return value;
-    }
-
-    private String getTextValue(int index, String[] textValues) {
-        String textValue;
-        try {
-            textValue = textValues[index];
-        } catch (IndexOutOfBoundsException exception) {
-            textValue = null;
-        }
-        return textValue;
+        maxBullets = 10;
     }
 
     public float getBulletVelocity() {

@@ -1,5 +1,6 @@
 package com.jimp.tanksgame.logic;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.jimp.tanksgame.logic.utils.CollisionDetector;
@@ -10,7 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.*;
+import static com.jimp.tanksgame.logic.Tank.PlayerProperties.LEFT;
+import static com.jimp.tanksgame.logic.Tank.PlayerProperties.RIGHT;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public class GameBoard {
@@ -116,14 +118,15 @@ public class GameBoard {
 
         int numberOfTests = (int) ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) / testingArea.getWidth());
         float offset = ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) % testingArea.getWidth()) + GAME_BOARD_LEFT_EDGE + PLAYER_SPACE;
-
+        //generating should maybe be reworked but it works
+        float spacing = 10f;
         for (int i = 0; i < numberOfTests; i++) {
-            testingArea.setPosition(i * testingArea.getWidth() + offset, GAME_BOARD_UPPER_EDGE);
+            testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD_UPPER_EDGE);
             boolean isFree = true;
             outerLoop:
             for (Colony colony : colonies) {
                 for (Cell cell : colony.getCells()) {
-                    if (CollisionDetector.cellsOverlap(testingArea, cell.getCellRectangle())) {
+                    if (Intersector.overlaps(testingArea, cell.getCellRectangle())) {
                         isFree = false;
                         break outerLoop;
                     }
@@ -146,7 +149,7 @@ public class GameBoard {
                 bullet.wasteBullet();
                 return true;
             }
-            if (CollisionDetector.bulletOverlapsCell(bullet.getBulletBody(), myBomb.getBombRectangle()))
+            if (Intersector.overlaps(bullet.getBulletBody(), myBomb.getBombRectangle()))
                 bullet.wasteBullet();
         }
         return false;
@@ -195,7 +198,7 @@ public class GameBoard {
     }
 
     private void checkIfHitAndProcess(Bullet bullet, Cell cell) {
-        if (cell.isAlive() && CollisionDetector.bulletOverlapsCell(bullet.getBulletBody(), cell.getCellRectangle())) {
+        if (cell.isAlive() && Intersector.overlaps(bullet.getBulletBody(), cell.getCellRectangle())) {
             cell.decreaseCurrentValue();
             bullet.wasteBullet();
         }
