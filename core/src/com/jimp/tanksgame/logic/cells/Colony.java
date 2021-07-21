@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.cells;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.MAX_CELLS_IN_COLONY;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.MIN_CELLS_IN_COLONY;
 
-class Colony {
+public class Colony {
 
     private static final int[][] ADJACENT_CELLS = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     private final List<Cell> cells;

@@ -3,7 +3,14 @@ package com.jimp.tanksgame.logic;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.jimp.tanksgame.logic.bullets.Bullet;
+import com.jimp.tanksgame.logic.cells.Bomb;
+import com.jimp.tanksgame.logic.cells.Cell;
+import com.jimp.tanksgame.logic.cells.Colony;
+import com.jimp.tanksgame.logic.tanks.Player;
 import com.jimp.tanksgame.logic.utils.CollisionDetector;
+import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator;
+import com.jimp.tanksgame.logic.utils.GameTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.LEFT;
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.RIGHT;
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.LEFT;
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.RIGHT;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public class GameBoard {
@@ -118,7 +125,7 @@ public class GameBoard {
 
         int numberOfTests = (int) ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) / testingArea.getWidth());
         float offset = ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) % testingArea.getWidth()) + GAME_BOARD_LEFT_EDGE + PLAYER_SPACE;
-        //generating should maybe be reworked but it works
+        //generating should (maybe) be reworked but it works
         float spacing = 10f;
         for (int i = 0; i < numberOfTests; i++) {
             testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD_UPPER_EDGE);

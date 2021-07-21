@@ -1,14 +1,15 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.cells;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.logic.Drawable;
 import com.jimp.tanksgame.logic.utils.GameConfiguration;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-class Cell implements Drawable {
+public class Cell implements Drawable {
 
     private static final int MAX_CELL_VALUE = 9;
     private static final int MIN_CELL_VALUE = 1;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jimp.tanksgame.graphics.MainMenuScreen;
-import com.jimp.tanksgame.logic.GameSettingsConfigurator;
+import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator;
 
 
 public class TanksGame extends Game {

@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.utils;
 
 public class GameSettingsConfigurator {
 
@@ -77,5 +77,9 @@ public class GameSettingsConfigurator {
 
     public int getMaxBullets() {
         return maxBullets;
+    }
+
+    public enum Difficulty {
+        EASY, NORMAL, HARD, ABSOLUTE_MADMAN
     }
 }

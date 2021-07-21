@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.utils;
 
 public class GameTimer {
 

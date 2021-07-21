@@ -1,16 +1,17 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.tanks;
 
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.LEFT;
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.RIGHT;
+import com.jimp.tanksgame.logic.bullets.Bullet;
+
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.LEFT;
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.RIGHT;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
-public class Player extends Tank implements Drawable {
+public class Player extends Tank {
 
     public Player(PlayerProperties which) {
         super(which);
     }
 
-    @Override
     public void move(float deltaTime, int pressedKey) {
         if (pressedKey == LEFT_PLAYER_UP || pressedKey == RIGHT_PLAYER_UP) {
             getPlayerBody().y += MOVEMENT_SPEED * deltaTime;
@@ -23,7 +24,6 @@ public class Player extends Tank implements Drawable {
             getPlayerBody().y = GAME_BOARD_UPPER_EDGE - PLAYER_SPACE;
     }
 
-    @Override
     public void moveTurret(float deltaTime, int pressedKey) {
         if (pressedKey == LEFT_TURRET_UP || pressedKey == RIGHT_TURRET_UP) {
             float degree = getTurretRotation() + TURRET_ROTATION_SPEED * deltaTime;

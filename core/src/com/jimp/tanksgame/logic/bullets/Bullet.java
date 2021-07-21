@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.bullets;
 
 
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.logic.Drawable;
 
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 
-class Bullet implements Drawable {
+public class Bullet implements Drawable {
 
     private final Circle bulletBody;
     private final Sprite sprite;

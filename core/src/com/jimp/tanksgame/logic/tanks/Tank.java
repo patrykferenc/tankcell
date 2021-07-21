@@ -1,15 +1,17 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.tanks;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.logic.bullets.Bullet;
+import com.jimp.tanksgame.logic.Drawable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.LEFT;
-import static com.jimp.tanksgame.logic.Tank.PlayerProperties.RIGHT;
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.LEFT;
+import static com.jimp.tanksgame.logic.tanks.Tank.PlayerProperties.RIGHT;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public abstract class Tank implements Drawable {
@@ -65,10 +67,6 @@ public abstract class Tank implements Drawable {
         return playerBody.getY() + playerBody.getHeight() / 2f;
     }
 
-    public abstract void move(float deltaTime, int pressedKey);
-
-    public abstract void moveTurret(float deltaTime, int pressedKey);
-
     public int getScore() {
         return score;
     }
@@ -80,8 +78,6 @@ public abstract class Tank implements Drawable {
     public List<Bullet> getShotBullets() {
         return shotBullets;
     }
-
-    public abstract void shootBullet(float bulletVelocity, float bulletSize, int maxBullets);
 
     public float getTurretX() {
         return getCenterX() + TURRET_LENGTH * (float) Math.cos(Math.toRadians(turretRotation));

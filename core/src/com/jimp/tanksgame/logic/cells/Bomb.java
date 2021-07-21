@@ -1,13 +1,14 @@
-package com.jimp.tanksgame.logic;
+package com.jimp.tanksgame.logic.cells;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.logic.Drawable;
 
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
-class Bomb implements Drawable {
+public class Bomb implements Drawable {
 
     private final Rectangle bombRectangle;
     private final Sprite sprite;
