@@ -15,30 +15,33 @@ public class ComputerTank extends Tank {
 
         switch (difficulty) {
             case EASY:
-                tankBrain = new Easy();
+                tankBrain = new Easy(this);
                 break;
             case NORMAL:
-                tankBrain = new Normal();
+                tankBrain = new Normal(this);
                 break;
             case HARD:
-                tankBrain = new Intelligent();
+                tankBrain = new Intelligent(this);
                 break;
             case ABSOLUTE_MADMAN:
-                tankBrain = new Mastermind();
+                tankBrain = new Mastermind(this);
                 break;
         }
     }
 
     public void updateState(float deltaTime, float bulletVelocity, float bulletSize, int maxBullets, List<Colony> colonies) {
-        switch (tankBrain.updateAndReturnState(deltaTime, colonies, getTurretRotation(), getCenterY())) {
+        switch (tankBrain.updateAndReturnState(deltaTime, colonies, this)) {
             case IDLE:
+                //wait
                 break;
             case AIMING:
+                moveTurret(deltaTime, tankBrain.getTurretDirectionToMoveTurret());
                 break;
             case SHOT:
                 shootBullet(bulletVelocity, bulletSize, maxBullets);
                 break;
             case MOVING:
+                //not sure about the future of that feature
                 break;
         }
     }
