@@ -18,7 +18,7 @@ public class MainMenuScreen extends MyScreen {
         setupUI();
         title = new Sprite(Resources.getInstance().getTitle());
         title.setSize(640, 96);
-        title.setCenter(ScreenProperties.WIDTH / 2f, 800f);
+        title.setCenter(ScreenProperties.WIDTH / 2f, 860f);
     }
 
     @Override
@@ -27,10 +27,13 @@ public class MainMenuScreen extends MyScreen {
         uiTable.setFillParent(true);
         getUiStage().addActor(uiTable);
 
-        TextButton newGame = new TextButton("New game", getUiSkin());
+        TextButton startPvP = new TextButton("Start PvP", getUiSkin());
+        TextButton startPvE = new TextButton("Start PvE game", getUiSkin());
         TextButton settings = new TextButton("Settings", getUiSkin());
         TextButton quit = new TextButton("Quit", getUiSkin());
-        uiTable.add(newGame).height(100).width(300).padBottom(10);
+        uiTable.add(startPvP).height(100).width(300).padBottom(10);
+        uiTable.row();
+        uiTable.add(startPvE).height(100).width(300).padBottom(10);
         uiTable.row();
         uiTable.add(settings).height(100).width(300).padBottom(10);
         uiTable.row();
@@ -40,9 +43,18 @@ public class MainMenuScreen extends MyScreen {
         getUiStage().addActor(uiTable);
 
         Gdx.input.setInputProcessor(getUiStage());
-        newGame.addListener(new ChangeListener() {
+        startPvP.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                getMyGame().setMode(TanksGame.GameMode.MULTIPLAYER);
+                getMyGame().setScreen(new GameScreen(getMyGame()));
+                dispose();
+            }
+        });
+        startPvE.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                getMyGame().setMode(TanksGame.GameMode.SINGLEPLAYER);
                 getMyGame().setScreen(new GameScreen(getMyGame()));
                 dispose();
             }

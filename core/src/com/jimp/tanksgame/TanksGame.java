@@ -12,6 +12,7 @@ public class TanksGame extends Game {
     private Batch myBatch;
     private BitmapFont myFont;
     private GameSettingsConfigurator myConfigurator;
+    private GameMode mode;
 
     public void create() {
         myBatch = new SpriteBatch();
@@ -41,5 +42,18 @@ public class TanksGame extends Game {
 
     public void setMyConfigurator(GameSettingsConfigurator myConfigurator) {
         this.myConfigurator = myConfigurator;
+    }
+
+    public GameMode getMode() {
+        return mode;
+    }
+
+    public void setMode(GameMode mode) {
+        this.mode = mode;
+    }
+
+    public enum GameMode {
+        SINGLEPLAYER,
+        MULTIPLAYER
     }
 }

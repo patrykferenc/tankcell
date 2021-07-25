@@ -48,7 +48,7 @@ class GameScreen extends MyScreen {
         myCamera = new OrthographicCamera();
         myCamera.setToOrtho(false, WIDTH, HEIGHT);
 
-        myGameBoard = new GameBoard(getMyGame().getMyConfigurator());
+        myGameBoard = new GameBoard(getMyGame().getMyConfigurator(), getMyGame().getMode());
 
         backgroundSprites = new ArrayList<>((int) ((GAME_BOARD_WIDTH / PLAYER_SPACE) * (GAME_BOARD_HEIGHT / PLAYER_SPACE)));
         prepareBackground();
@@ -66,10 +66,11 @@ class GameScreen extends MyScreen {
                 if (key == LEFT_PLAYER_SHOOT) {
                     leftPlayerShot = true;
                 }
-                if (key == RIGHT_PLAYER_SHOOT) {
-                    rightPlayerShot = true;
+                if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
+                    if (key == RIGHT_PLAYER_SHOOT) {
+                        rightPlayerShot = true;
+                    }
                 }
-
                 return false;
             }
 
@@ -78,10 +79,11 @@ class GameScreen extends MyScreen {
                 if (key == LEFT_PLAYER_SHOOT) {
                     leftPlayerShot = false;
                 }
-                if (key == RIGHT_PLAYER_SHOOT) {
-                    rightPlayerShot = false;
+                if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
+                    if (key == RIGHT_PLAYER_SHOOT) {
+                        rightPlayerShot = false;
+                    }
                 }
-
                 return false;
             }
         });
@@ -240,12 +242,14 @@ class GameScreen extends MyScreen {
             pressedKey = LEFT_PLAYER_DOWN;
         myGameBoard.getLeftPlayer().move(Gdx.graphics.getDeltaTime(), pressedKey);
 
-        pressedKey = -1;
-        if (Gdx.input.isKeyPressed(RIGHT_PLAYER_UP))
-            pressedKey = RIGHT_PLAYER_UP;
-        if (Gdx.input.isKeyPressed(RIGHT_PLAYER_DOWN))
-            pressedKey = RIGHT_PLAYER_DOWN;
-        myGameBoard.getRightPlayer().move(Gdx.graphics.getDeltaTime(), pressedKey);
+        if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
+            pressedKey = -1;
+            if (Gdx.input.isKeyPressed(RIGHT_PLAYER_UP))
+                pressedKey = RIGHT_PLAYER_UP;
+            if (Gdx.input.isKeyPressed(RIGHT_PLAYER_DOWN))
+                pressedKey = RIGHT_PLAYER_DOWN;
+            myGameBoard.getRightPlayer().move(Gdx.graphics.getDeltaTime(), pressedKey);
+        }
     }
 
     private void processPlayerTurretMovement() {
@@ -257,12 +261,14 @@ class GameScreen extends MyScreen {
             pressedKey = LEFT_TURRET_DOWN;
         myGameBoard.getLeftPlayer().moveTurret(Gdx.graphics.getDeltaTime(), pressedKey);
 
-        pressedKey = -1;
-        if (Gdx.input.isKeyPressed(RIGHT_TURRET_UP))
-            pressedKey = RIGHT_TURRET_UP;
-        if (Gdx.input.isKeyPressed(RIGHT_TURRET_DOWN))
-            pressedKey = RIGHT_TURRET_DOWN;
-        myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), pressedKey);
+        if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
+            pressedKey = -1;
+            if (Gdx.input.isKeyPressed(RIGHT_TURRET_UP))
+                pressedKey = RIGHT_TURRET_UP;
+            if (Gdx.input.isKeyPressed(RIGHT_TURRET_DOWN))
+                pressedKey = RIGHT_TURRET_DOWN;
+            myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), pressedKey);
+        }
     }
 
     @Override

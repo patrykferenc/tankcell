@@ -3,11 +3,14 @@ package com.jimp.tanksgame.logic;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.jimp.tanksgame.TanksGame;
 import com.jimp.tanksgame.logic.bullets.Bullet;
 import com.jimp.tanksgame.logic.cells.Bomb;
 import com.jimp.tanksgame.logic.cells.Cell;
 import com.jimp.tanksgame.logic.cells.Colony;
+import com.jimp.tanksgame.logic.tanks.ComputerTank;
 import com.jimp.tanksgame.logic.tanks.Player;
+import com.jimp.tanksgame.logic.tanks.Tank;
 import com.jimp.tanksgame.logic.utils.CollisionDetector;
 import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator;
 import com.jimp.tanksgame.logic.utils.GameTimer;
@@ -24,8 +27,8 @@ import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public class GameBoard {
 
-    private final Player leftPlayer;
-    private final Player rightPlayer;
+    private final Tank leftPlayer;
+    private final Tank rightPlayer;
     private final List<Colony> colonies;
     private final Bomb myBomb;
     private final GameTimer colonySpawningTimer;
@@ -45,7 +48,7 @@ public class GameBoard {
     private float bulletVelocity;
     private float timeSinceLastFrame;
 
-    public GameBoard(GameSettingsConfigurator configurator) {
+    public GameBoard(GameSettingsConfigurator configurator, TanksGame.GameMode mode) {
         cellSize = configurator.getCellEdge();
         deltaCellSize = configurator.getDeltaCellEdge();
         cellVelocity = configurator.getCellVelocity();
@@ -59,7 +62,16 @@ public class GameBoard {
         timeSinceLastFrame = 0f;
 
         leftPlayer = new Player(LEFT);
-        rightPlayer = new Player(RIGHT);
+        switch (mode) {
+            case SINGLEPLAYER:
+                rightPlayer = new ComputerTank(RIGHT, GameSettingsConfigurator.Difficulty.NORMAL);
+                break;
+            case MULTIPLAYER:
+                rightPlayer = new Player(RIGHT);
+                break;
+            default:
+                rightPlayer = new Player(RIGHT);
+        }
         myBomb = new Bomb();
         colonies = new ArrayList<>();
         leftPlayerShootingTimer = new GameTimer(0.15f);
@@ -150,7 +162,7 @@ public class GameBoard {
         for (Colony colonyToMove : colonies) colonyToMove.move(timeSinceLastFrame, cellVelocity);
     }
 
-    private boolean checkIfHitBomb(Player player) {
+    private boolean checkIfHitBomb(Tank player) {
         for (Bullet bullet : player.getShotBullets()) {
             if (CollisionDetector.bulletOverlapsBombEdge(bullet.getBulletBody(), myBomb.getBombEdge())) {
                 bullet.wasteBullet();
@@ -183,7 +195,7 @@ public class GameBoard {
         movePlayerBullets(rightPlayer);
     }
 
-    private void movePlayerBullets(Player player) {
+    private void movePlayerBullets(Tank player) {
         for (Bullet bullet : player.getShotBullets()) bullet.move(timeSinceLastFrame, bulletVelocity);
     }
 
@@ -192,7 +204,7 @@ public class GameBoard {
         checkHits(rightPlayer);
     }
 
-    private void checkHits(Player player) {
+    private void checkHits(Tank player) {
         for (Bullet bullet : player.getShotBullets()) {
             for (Colony colony : colonies) {
                 colony.getCells().forEach(cell -> checkIfHitAndProcess(bullet, cell));
@@ -220,15 +232,15 @@ public class GameBoard {
         cleanWastedPlayerBullets(rightPlayer);
     }
 
-    private void cleanWastedPlayerBullets(Player player) {
+    private void cleanWastedPlayerBullets(Tank player) {
         player.getShotBullets().removeIf(Bullet::isWasted);
     }
 
-    public Player getLeftPlayer() {
+    public Tank getLeftPlayer() {
         return leftPlayer;
     }
 
-    public Player getRightPlayer() {
+    public Tank getRightPlayer() {
         return rightPlayer;
     }
 

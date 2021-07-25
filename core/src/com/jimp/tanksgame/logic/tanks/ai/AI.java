@@ -15,7 +15,7 @@ public abstract class AI {
     private CurrentState state;
     private Rectangle currentTarget;
     private Vector2 directionToTarget;
-    private Tank tank;
+    private final Tank tank;
 
     protected AI(Tank tank) {
         this.tank = tank;
