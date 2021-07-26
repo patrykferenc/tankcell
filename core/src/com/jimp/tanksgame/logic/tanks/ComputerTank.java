@@ -29,7 +29,7 @@ public class ComputerTank extends Tank {
         }
     }
 
-    public void updateState(float deltaTime, float bulletVelocity, float bulletSize, int maxBullets, List<Colony> colonies) {
+    public void updateState(float deltaTime, float bulletVelocity, float bulletSize, int maxBullets, List<Colony> colonies, boolean canShoot) {
         switch (tankBrain.updateAndReturnState(deltaTime, colonies, this)) {
             case IDLE:
                 //wait
@@ -38,7 +38,8 @@ public class ComputerTank extends Tank {
                 moveTurret(deltaTime, tankBrain.getTurretDirectionToMoveTurret());
                 break;
             case SHOT:
-                shootBullet(bulletVelocity, bulletSize, maxBullets);
+                if (canShoot)
+                    shootBullet(bulletVelocity, bulletSize, maxBullets);
                 break;
             case MOVING:
                 //not sure about the future of that feature

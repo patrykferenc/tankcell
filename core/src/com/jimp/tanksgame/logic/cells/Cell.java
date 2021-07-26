@@ -14,6 +14,8 @@ public class Cell implements Drawable {
     private static final int MAX_CELL_VALUE = 9;
     private static final int MIN_CELL_VALUE = 1;
 
+    private final int id;
+
     private final int startingValue;
     private final Rectangle cellRectangle;
     private int currentValue;
@@ -21,7 +23,8 @@ public class Cell implements Drawable {
     private Sprite cellSprite;
     private Sprite numberSprite;
 
-    public Cell(float x, float y, float cellSize) {
+    public Cell(float x, float y, float cellSize, int id) {
+        this.id = id;
         cellRectangle = new Rectangle();
         cellRectangle.width = cellSize;
         cellRectangle.height = cellSize;
@@ -139,6 +142,10 @@ public class Cell implements Drawable {
     public void draw(Batch batch) {
         cellSprite.draw(batch);
         numberSprite.draw(batch);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public enum Level {

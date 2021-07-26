@@ -16,8 +16,8 @@ public class Intelligent extends AI {
         return CurrentState.IDLE;
     }
 
-    @Override
-    protected void chooseTarget() {
+    //@Override
+    protected void chooseTarget(List<Colony> colonies) {
 
     }
 }

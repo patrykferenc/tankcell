@@ -13,10 +13,14 @@ public class Colony {
     private final List<Cell> cells;
     private int totalStartingValue;
     private boolean isAlreadyDead;
+    private int numberOfCells;
+    private final int id;
+    private static int numberOfColonies;
 
     public Colony(float cellSize, float centerX, float centerY) {
+        id = ++numberOfColonies;
         cells = new ArrayList<>(MAX_CELLS_IN_COLONY);
-        cells.add(new Cell(centerX, centerY, cellSize));
+        cells.add(new Cell(centerX, centerY, cellSize, ++numberOfCells));
 
         int numStartingCells = ThreadLocalRandom.current().nextInt(MIN_CELLS_IN_COLONY, MAX_CELLS_IN_COLONY);
         while (cells.size() < numStartingCells) {
@@ -25,7 +29,7 @@ public class Colony {
                     float newX = ADJACENT_CELLS[i][1] * cellSize + centerX;
                     float newY = ADJACENT_CELLS[i][0] * cellSize + centerY;
 
-                    cells.add(new Cell(newX, newY, cellSize));
+                    cells.add(new Cell(newX, newY, cellSize, ++numberOfCells));
                 }
             }
         }
@@ -46,7 +50,7 @@ public class Colony {
         return isAlreadyDead;
     }
 
-    public void setAlreadyDead() {
+    public void makeAlreadyDead() {
         isAlreadyDead = true;
     }
 
@@ -62,7 +66,19 @@ public class Colony {
         return cells;
     }
 
+    public Cell getCentralCell() {
+        Cell centralCell = null;
+        for (Cell cell : cells) if (cell.getId() == 1) {
+            centralCell = cell;
+        }
+        return centralCell;
+    }
+
     public void move(float deltaTime, float velocity) {
         for (Cell cell : cells) cell.move(deltaTime, velocity);
+    }
+
+    public int getId() {
+        return id;
     }
 }

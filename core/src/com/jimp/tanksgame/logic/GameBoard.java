@@ -47,6 +47,7 @@ public class GameBoard {
     private float bulletSize;
     private float bulletVelocity;
     private float timeSinceLastFrame;
+    private TanksGame.GameMode mode;
 
     public GameBoard(GameSettingsConfigurator configurator, TanksGame.GameMode mode) {
         cellSize = configurator.getCellEdge();
@@ -61,8 +62,10 @@ public class GameBoard {
 
         timeSinceLastFrame = 0f;
 
+        this.mode = mode;
+
         leftPlayer = new Player(LEFT);
-        switch (mode) {
+        switch (this.mode) {
             case SINGLEPLAYER:
                 rightPlayer = new ComputerTank(RIGHT, GameSettingsConfigurator.Difficulty.NORMAL);
                 break;
@@ -76,7 +79,7 @@ public class GameBoard {
         colonies = new ArrayList<>();
         leftPlayerShootingTimer = new GameTimer(0.15f);
         rightPlayerShootingTimer = new GameTimer(0.15f);
-        colonySpawningTimer = new GameTimer(2f);
+        colonySpawningTimer = new GameTimer(1.4f);
         colonySpawningTimer.reset();
         sizeAndSpeedTimer = new GameTimer(configurator.getTimeToDecreaseSizeAndSpeed());
         valueIncrementTimer = new GameTimer(configurator.getTimeToIncreaseCellValues());
@@ -86,6 +89,10 @@ public class GameBoard {
     public GameEndState updateGame(float deltaTime, boolean leftPlayerShot, boolean rightPlayerShot) {
         timeSinceLastFrame = deltaTime;
         if (!gamePlayTimer.update(timeSinceLastFrame)) {
+            if (mode == TanksGame.GameMode.SINGLEPLAYER) {
+                ComputerTank ai = (ComputerTank) rightPlayer;
+                ai.updateState(deltaTime, bulletVelocity, bulletSize, maxBullets, colonies, rightPlayerShootingTimer.isJustPassed());
+            }
             processPlayerShots(leftPlayerShot, rightPlayerShot, deltaTime);
             moveBullets();
             if (checkIfHitBomb(leftPlayer)) {
@@ -111,9 +118,9 @@ public class GameBoard {
     }
 
     private void processPlayerShots(boolean leftPlayerShot, boolean rightPlayerShot, float deltaTime) {
-        if (leftPlayerShot && leftPlayerShootingTimer.update(deltaTime))
+        if (leftPlayerShootingTimer.update(deltaTime) && leftPlayerShot)
             leftPlayer.shootBullet(bulletVelocity, bulletSize, maxBullets);
-        if (rightPlayerShot && rightPlayerShootingTimer.update(deltaTime))
+        if (rightPlayerShootingTimer.update(deltaTime) && rightPlayerShot)
             rightPlayer.shootBullet(bulletVelocity, bulletSize, maxBullets);
     }
 
@@ -210,7 +217,7 @@ public class GameBoard {
                 colony.getCells().forEach(cell -> checkIfHitAndProcess(bullet, cell));
                 if (colony.justKilled()) {
                     player.increaseScoreBy(colony.getTotalStartingValue());
-                    colony.setAlreadyDead();
+                    colony.makeAlreadyDead();
                 }
             }
         }
