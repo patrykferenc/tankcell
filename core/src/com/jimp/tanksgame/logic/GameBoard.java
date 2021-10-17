@@ -67,7 +67,7 @@ public class GameBoard {
         leftPlayer = new Player(LEFT);
         switch (this.mode) {
             case SINGLEPLAYER:
-                rightPlayer = new ComputerTank(RIGHT, GameSettingsConfigurator.Difficulty.NORMAL);
+                rightPlayer = new ComputerTank(RIGHT, GameSettingsConfigurator.Difficulty.EASY);
                 break;
             case MULTIPLAYER:
                 rightPlayer = new Player(RIGHT);

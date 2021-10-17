@@ -12,6 +12,10 @@ public final class GameConfiguration {
     public static final float GAME_BOARD_UPPER_EDGE = GAME_BOARD_LOWER_EDGE + GAME_BOARD_HEIGHT;
     public static final float PLAYER_SPACE = 150f;
 
+    public static final float BOMB_SIZE = 80f;
+    public static final float BOMB_X = GAME_BOARD_LEFT_EDGE + (GAME_BOARD_WIDTH / 2f) - (BOMB_SIZE / 2f);
+    public static final float BOMB_Y = GAME_BOARD_LOWER_EDGE;
+
     public static final float TURRET_LENGTH = 64f;
     public static final int LEFT_PLAYER_UP = Input.Keys.W;
     public static final int LEFT_PLAYER_DOWN = Input.Keys.S;

@@ -17,7 +17,7 @@ public class GameSettingsConfigurator {
 
     //those are default values (for now)
     public GameSettingsConfigurator() {
-        bulletVelocity = 800f;
+        bulletVelocity = 1200f;
         deltaBulletVelocity = 50f;
         cellVelocity = 80f;
         deltaCellVelocity = 2f;

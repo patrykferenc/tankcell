@@ -45,12 +45,9 @@ public class Normal extends AI {
     private void updateDirectionToTarget() {
         float angle = (float) Math.toDegrees(Math.atan2(getCurrentTargetCell().getCellRectangle().getY() - getTank().getCenterY(),
                 getCurrentTargetCell().getCellRectangle().getX() - getTank().getCenterX()));
-
-
         if (angle < 0) {
             angle += 360;
         }
-
         setDirectionToTarget(angle);
     }
 

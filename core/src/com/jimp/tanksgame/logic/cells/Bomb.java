@@ -14,12 +14,11 @@ public class Bomb implements Drawable {
     private final Sprite sprite;
 
     public Bomb() {
-        float cellSize = 80.0f;
         bombRectangle = new Rectangle();
-        bombRectangle.setSize(cellSize);
-        bombRectangle.setPosition(GAME_BOARD_LEFT_EDGE + (GAME_BOARD_WIDTH / 2f) - (cellSize / 2f), GAME_BOARD_LOWER_EDGE);
+        bombRectangle.setSize(BOMB_SIZE);
+        bombRectangle.setPosition(BOMB_X, BOMB_Y);
         sprite = new Sprite(Resources.getInstance().getBomb());
-        sprite.setSize(cellSize, cellSize);
+        sprite.setSize(BOMB_SIZE, BOMB_SIZE);
         sprite.setPosition(bombRectangle.getX(), bombRectangle.getY());
     }
 
