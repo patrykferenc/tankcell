@@ -1,8 +1,9 @@
-package com.jimp.tanksgame.graphics;
+package com.jimp.tanksgame.graphics.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.jimp.tanksgame.TanksGame;
+import com.jimp.tanksgame.graphics.ScreenProperties;
 
 public abstract class MySettingsScreen extends MyScreen {
 

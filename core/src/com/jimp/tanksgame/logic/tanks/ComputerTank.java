@@ -2,7 +2,7 @@ package com.jimp.tanksgame.logic.tanks;
 
 import com.jimp.tanksgame.logic.cells.Colony;
 import com.jimp.tanksgame.logic.tanks.ai.*;
-import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator.Difficulty;
+import com.jimp.tanksgame.logic.utils.GameConfiguration.Difficulty;
 
 import java.util.List;
 

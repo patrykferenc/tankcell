@@ -1,10 +1,11 @@
-package com.jimp.tanksgame.graphics;
+package com.jimp.tanksgame.graphics.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.jimp.tanksgame.TanksGame;
+import com.jimp.tanksgame.graphics.Resources;
 
 public abstract class MyScreen implements Screen {
 

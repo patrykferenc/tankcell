@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.graphics;
+package com.jimp.tanksgame.graphics.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.jimp.tanksgame.TanksGame;
+import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.graphics.ScreenProperties;
+import com.jimp.tanksgame.graphics.screens.MyScreen;
+import com.jimp.tanksgame.graphics.screens.game.GameScreen;
 
 public class MainMenuScreen extends MyScreen {
 

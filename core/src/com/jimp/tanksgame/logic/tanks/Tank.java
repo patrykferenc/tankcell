@@ -116,10 +116,11 @@ public abstract class Tank implements Drawable {
             getShotBullets().add(new Bullet(getTurretX(), getTurretY(), bulletSize, bulletVelocity, getTurretRotation()));
     }
 
-    public void move(float deltaTime, int pressedKey) {
-        if (pressedKey == LEFT_PLAYER_UP || pressedKey == RIGHT_PLAYER_UP) {
+    //True means up, false means down
+    public void move(float deltaTime, boolean direction) {
+        if (direction) {
             getPlayerBody().y += MOVEMENT_SPEED * deltaTime;
-        } else if (pressedKey == LEFT_PLAYER_DOWN || pressedKey == RIGHT_PLAYER_DOWN) {
+        } else {
             getPlayerBody().y -= MOVEMENT_SPEED * deltaTime;
         }
         if (getPlayerBody().y < GAME_BOARD_LOWER_EDGE)
@@ -128,14 +129,17 @@ public abstract class Tank implements Drawable {
             getPlayerBody().y = GAME_BOARD_UPPER_EDGE - PLAYER_SPACE;
     }
 
-    public void moveTurret(float deltaTime, int pressedKey) {
-        if (pressedKey == LEFT_TURRET_UP || pressedKey == RIGHT_TURRET_UP) {
-            float degree = getTurretRotation() + TURRET_ROTATION_SPEED * deltaTime;
-            setTurretRotation(degree);
-        } else if (pressedKey == LEFT_TURRET_DOWN || pressedKey == RIGHT_TURRET_DOWN) {
-            float degree = getTurretRotation() - TURRET_ROTATION_SPEED * deltaTime;
-            setTurretRotation(degree);
+    //True means up, false means down
+    public void moveTurret(float deltaTime, boolean direction) {
+        float degree;
+        if (direction) {
+            degree = getTurretRotation() + TURRET_ROTATION_SPEED * deltaTime;
+        } else {
+            degree = getTurretRotation() - TURRET_ROTATION_SPEED * deltaTime;
         }
+
+        setTurretRotation(degree);
+
         if (getWhichPlayer().equals(LEFT)) {
             if (getTurretRotation() > 60.0f)
                 setTurretRotation(60.0f);

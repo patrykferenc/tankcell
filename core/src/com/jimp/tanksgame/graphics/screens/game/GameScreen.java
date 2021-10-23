@@ -1,8 +1,9 @@
-package com.jimp.tanksgame.graphics;
+package com.jimp.tanksgame.graphics.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.jimp.tanksgame.TanksGame;
+import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.graphics.screens.MyScreen;
+import com.jimp.tanksgame.graphics.screens.menu.MainMenuScreen;
 import com.jimp.tanksgame.logic.Drawable;
 import com.jimp.tanksgame.logic.GameBoard;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -25,13 +29,25 @@ import static com.jimp.tanksgame.graphics.ScreenProperties.WIDTH;
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
 import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
-class GameScreen extends MyScreen {
+public class GameScreen extends MyScreen {
 
     private final OrthographicCamera myCamera;
     private final ShapeDrawer myShapeDrawer;
     private final GameBoard myGameBoard;
 
     private final List<Sprite> backgroundSprites;
+
+    private int LEFT_PLAYER_UP;
+    private int LEFT_PLAYER_DOWN;
+    private int LEFT_TURRET_UP;
+    private int LEFT_TURRET_DOWN;
+    private int LEFT_PLAYER_SHOOT;
+
+    private int RIGHT_PLAYER_UP;
+    private int RIGHT_PLAYER_DOWN;
+    private int RIGHT_TURRET_UP;
+    private int RIGHT_TURRET_DOWN;
+    private int RIGHT_PLAYER_SHOOT;
 
     private boolean leftPlayerShot;
     private boolean rightPlayerShot;
@@ -48,10 +64,12 @@ class GameScreen extends MyScreen {
         myCamera = new OrthographicCamera();
         myCamera.setToOrtho(false, WIDTH, HEIGHT);
 
-        myGameBoard = new GameBoard(getMyGame().getMyConfigurator(), getMyGame().getMode());
+        myGameBoard = new GameBoard(getMyGame().getMyConfig().getGameSettings(), getMyGame().getMode());
 
         backgroundSprites = new ArrayList<>((int) ((GAME_BOARD_WIDTH / PLAYER_SPACE) * (GAME_BOARD_HEIGHT / PLAYER_SPACE)));
         prepareBackground();
+
+        setPlayerControls(game);
 
         leftPlayerShot = false;
         rightPlayerShot = false;
@@ -89,6 +107,22 @@ class GameScreen extends MyScreen {
         });
 
         Gdx.input.setInputProcessor(myInputMultiplexer);
+    }
+
+    // Controls are initialised like that because perfs are long to read from every time.
+    private void setPlayerControls(TanksGame game) {
+        Preferences controls = game.getMyConfig().getControls();
+        LEFT_PLAYER_UP = controls.getInteger("LEFT_PLAYER_UP");
+        LEFT_PLAYER_DOWN = controls.getInteger("LEFT_PLAYER_DOWN");
+        LEFT_TURRET_UP = controls.getInteger("LEFT_TURRET_UP");
+        LEFT_TURRET_DOWN = controls.getInteger("LEFT_TURRET_DOWN");
+        LEFT_PLAYER_SHOOT = controls.getInteger("LEFT_PLAYER_SHOOT");
+
+        RIGHT_PLAYER_UP = controls.getInteger("RIGHT_PLAYER_UP");
+        RIGHT_PLAYER_DOWN = controls.getInteger("RIGHT_PLAYER_DOWN");
+        RIGHT_TURRET_UP = controls.getInteger("RIGHT_TURRET_UP");
+        RIGHT_TURRET_DOWN = controls.getInteger("RIGHT_TURRET_DOWN");
+        RIGHT_PLAYER_SHOOT = controls.getInteger("RIGHT_PLAYER_SHOOT");
     }
 
     @Override
@@ -234,40 +268,30 @@ class GameScreen extends MyScreen {
     }
 
     private void processPlayerBodyMovement() {
-        int pressedKey = -1;
-
         if (Gdx.input.isKeyPressed(LEFT_PLAYER_UP))
-            pressedKey = LEFT_PLAYER_UP;
+            myGameBoard.getLeftPlayer().move(Gdx.graphics.getDeltaTime(), true);
         if (Gdx.input.isKeyPressed(LEFT_PLAYER_DOWN))
-            pressedKey = LEFT_PLAYER_DOWN;
-        myGameBoard.getLeftPlayer().move(Gdx.graphics.getDeltaTime(), pressedKey);
+            myGameBoard.getLeftPlayer().move(Gdx.graphics.getDeltaTime(), false);
 
         if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
-            pressedKey = -1;
             if (Gdx.input.isKeyPressed(RIGHT_PLAYER_UP))
-                pressedKey = RIGHT_PLAYER_UP;
+                myGameBoard.getRightPlayer().move(Gdx.graphics.getDeltaTime(), true);
             if (Gdx.input.isKeyPressed(RIGHT_PLAYER_DOWN))
-                pressedKey = RIGHT_PLAYER_DOWN;
-            myGameBoard.getRightPlayer().move(Gdx.graphics.getDeltaTime(), pressedKey);
+                myGameBoard.getRightPlayer().move(Gdx.graphics.getDeltaTime(), false);
         }
     }
 
     private void processPlayerTurretMovement() {
-        int pressedKey = -1;
-
         if (Gdx.input.isKeyPressed(LEFT_TURRET_UP))
-            pressedKey = LEFT_TURRET_UP;
+            myGameBoard.getLeftPlayer().moveTurret(Gdx.graphics.getDeltaTime(), true);
         if (Gdx.input.isKeyPressed(LEFT_TURRET_DOWN))
-            pressedKey = LEFT_TURRET_DOWN;
-        myGameBoard.getLeftPlayer().moveTurret(Gdx.graphics.getDeltaTime(), pressedKey);
+            myGameBoard.getLeftPlayer().moveTurret(Gdx.graphics.getDeltaTime(), false);
 
         if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
-            pressedKey = -1;
             if (Gdx.input.isKeyPressed(RIGHT_TURRET_UP))
-                pressedKey = RIGHT_TURRET_UP;
+                myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), true);
             if (Gdx.input.isKeyPressed(RIGHT_TURRET_DOWN))
-                pressedKey = RIGHT_TURRET_DOWN;
-            myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), pressedKey);
+                myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), false);
         }
     }
 

@@ -10,12 +10,12 @@ import static com.jimp.tanksgame.logic.utils.GameConfiguration.MIN_CELLS_IN_COLO
 public class Colony {
 
     private static final int[][] ADJACENT_CELLS = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    private static int numberOfColonies;
     private final List<Cell> cells;
+    private final int id;
     private int totalStartingValue;
     private boolean isAlreadyDead;
     private int numberOfCells;
-    private final int id;
-    private static int numberOfColonies;
 
     public Colony(float cellSize, float centerX, float centerY) {
         id = ++numberOfColonies;
@@ -68,9 +68,10 @@ public class Colony {
 
     public Cell getCentralCell() {
         Cell centralCell = null;
-        for (Cell cell : cells) if (cell.getId() == 1) {
-            centralCell = cell;
-        }
+        for (Cell cell : cells)
+            if (cell.getId() == 1) {
+                centralCell = cell;
+            }
         return centralCell;
     }
 

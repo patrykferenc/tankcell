@@ -1,5 +1,6 @@
 package com.jimp.tanksgame.logic;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +13,6 @@ import com.jimp.tanksgame.logic.tanks.ComputerTank;
 import com.jimp.tanksgame.logic.tanks.Player;
 import com.jimp.tanksgame.logic.tanks.Tank;
 import com.jimp.tanksgame.logic.utils.CollisionDetector;
-import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator;
 import com.jimp.tanksgame.logic.utils.GameTimer;
 
 import java.util.ArrayList;
@@ -49,16 +49,16 @@ public class GameBoard {
     private float timeSinceLastFrame;
     private TanksGame.GameMode mode;
 
-    public GameBoard(GameSettingsConfigurator configurator, TanksGame.GameMode mode) {
-        cellSize = configurator.getCellEdge();
-        deltaCellSize = configurator.getDeltaCellEdge();
-        cellVelocity = configurator.getCellVelocity();
-        deltaCellVelocity = configurator.getDeltaCellVelocity();
-        bulletSize = configurator.getBulletRadius();
-        deltaBulletSize = configurator.getDeltaBulletRadius();
-        bulletVelocity = configurator.getBulletVelocity();
-        deltaBulletVelocity = configurator.getDeltaBulletVelocity();
-        maxBullets = configurator.getMaxBullets();
+    public GameBoard(Preferences gameSettings, TanksGame.GameMode mode) {
+        cellSize = gameSettings.getFloat("cellEdge");
+        deltaCellSize = gameSettings.getFloat("deltaCellEdge");
+        cellVelocity = gameSettings.getFloat("cellVelocity");
+        deltaCellVelocity = gameSettings.getFloat("deltaCellVelocity");
+        bulletSize = gameSettings.getFloat("bulletRadius");
+        deltaBulletSize = gameSettings.getFloat("deltaBulletRadius");
+        bulletVelocity = gameSettings.getFloat("bulletVelocity");
+        deltaBulletVelocity = gameSettings.getFloat("deltaBulletVelocity");
+        maxBullets = gameSettings.getInteger("maxBullets");
 
         timeSinceLastFrame = 0f;
 
@@ -67,7 +67,7 @@ public class GameBoard {
         leftPlayer = new Player(LEFT);
         switch (this.mode) {
             case SINGLEPLAYER:
-                rightPlayer = new ComputerTank(RIGHT, GameSettingsConfigurator.Difficulty.EASY);
+                rightPlayer = new ComputerTank(RIGHT, Difficulty.EASY);
                 break;
             case MULTIPLAYER:
                 rightPlayer = new Player(RIGHT);
@@ -81,9 +81,9 @@ public class GameBoard {
         rightPlayerShootingTimer = new GameTimer(0.15f);
         colonySpawningTimer = new GameTimer(1.4f);
         colonySpawningTimer.reset();
-        sizeAndSpeedTimer = new GameTimer(configurator.getTimeToDecreaseSizeAndSpeed());
-        valueIncrementTimer = new GameTimer(configurator.getTimeToIncreaseCellValues());
-        gamePlayTimer = new GameTimer(configurator.getTimeOfPlay());
+        sizeAndSpeedTimer = new GameTimer(gameSettings.getFloat("timeToDecreaseSizeAndSpeed"));
+        valueIncrementTimer = new GameTimer(gameSettings.getFloat("timeToIncreaseCellValues"));
+        gamePlayTimer = new GameTimer(gameSettings.getFloat("timeOfPlay"));
     }
 
     public GameEndState updateGame(float deltaTime, boolean leftPlayerShot, boolean rightPlayerShot) {

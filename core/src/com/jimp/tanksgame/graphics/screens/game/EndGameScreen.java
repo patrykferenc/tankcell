@@ -1,4 +1,4 @@
-package com.jimp.tanksgame.graphics;
+package com.jimp.tanksgame.graphics.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jimp.tanksgame.TanksGame;
+import com.jimp.tanksgame.graphics.Resources;
+import com.jimp.tanksgame.graphics.ScreenProperties;
+import com.jimp.tanksgame.graphics.screens.menu.MainMenuScreen;
 import com.jimp.tanksgame.logic.GameBoard.GameEndState;
 
 import static com.jimp.tanksgame.graphics.ScreenProperties.HEIGHT;

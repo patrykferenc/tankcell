@@ -8,7 +8,6 @@ import com.jimp.tanksgame.logic.tanks.Tank;
 import java.util.List;
 
 import static com.jimp.tanksgame.logic.tanks.ai.AI.CurrentState.IDLE;
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public abstract class AI {
 
@@ -35,22 +34,9 @@ public abstract class AI {
                 (tank.getTurretRotation() <= directionToTarget.angleDeg() + ANGLE_TOLERANCE);
     }
 
-    public int getTurretDirectionToMoveTurret() {
-        switch (tank.getWhichPlayer()) {
-            case LEFT:
-                if (directionToTarget.angleDeg() > tank.getTurretRotation() + ANGLE_TOLERANCE)
-                    return LEFT_TURRET_UP;
-                else if (directionToTarget.angleDeg() < tank.getTurretRotation() - ANGLE_TOLERANCE)
-                    return LEFT_TURRET_DOWN;
-                break;
-            case RIGHT:
-                if (directionToTarget.angleDeg() > tank.getTurretRotation() + ANGLE_TOLERANCE)
-                    return RIGHT_TURRET_UP;
-                else if (directionToTarget.angleDeg() < tank.getTurretRotation() - ANGLE_TOLERANCE)
-                    return RIGHT_TURRET_DOWN;
-                break;
-        }
-        return 0;
+    //Returns true if up, false if down
+    public boolean getTurretDirectionToMoveTurret() {
+        return directionToTarget.angleDeg() > tank.getTurretRotation() + ANGLE_TOLERANCE;
     }
 
     public int getBodyDirectionToMove() {

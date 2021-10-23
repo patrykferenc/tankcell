@@ -4,21 +4,21 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.jimp.tanksgame.graphics.MainMenuScreen;
-import com.jimp.tanksgame.logic.utils.GameSettingsConfigurator;
+import com.jimp.tanksgame.graphics.screens.menu.MainMenuScreen;
+import com.jimp.tanksgame.logic.utils.GameConfiguration;
 
 
 public class TanksGame extends Game {
     private Batch myBatch;
     private BitmapFont myFont;
-    private GameSettingsConfigurator myConfigurator;
+    private GameConfiguration myConfig;
     private GameMode mode;
 
     public void create() {
         myBatch = new SpriteBatch();
         myFont = new BitmapFont();
         myFont.getData().setScale(2f);
-        myConfigurator = new GameSettingsConfigurator();
+        myConfig = new GameConfiguration();
         this.setScreen(new MainMenuScreen(this));
     }
 
@@ -36,12 +36,8 @@ public class TanksGame extends Game {
         return myFont;
     }
 
-    public GameSettingsConfigurator getMyConfigurator() {
-        return myConfigurator;
-    }
-
-    public void setMyConfigurator(GameSettingsConfigurator myConfigurator) {
-        this.myConfigurator = myConfigurator;
+    public GameConfiguration getMyConfig() {
+        return myConfig;
     }
 
     public GameMode getMode() {
