@@ -18,4 +18,4 @@ provided by amazing https://kenney.nl/assets.
 
 ### License
 
-Licensed under the MIT license - do what you want with it ;))
+Licensed under the GPL 3.0.
