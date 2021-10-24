@@ -27,6 +27,8 @@ public class ControlsSettings extends MySettingsScreen {
 
         getUiStage().addActor(uiTable);
         Gdx.input.setInputProcessor(getUiStage());
+
+
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

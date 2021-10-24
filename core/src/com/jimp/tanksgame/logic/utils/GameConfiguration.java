@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.ScreenProperties;
 
 public final class GameConfiguration {
-    //I need to rewrite this because it is a real mess...
     public static final Rectangle GAME_BOARD = new Rectangle(
             (ScreenProperties.WIDTH - 1600) / 2.0f,
             (ScreenProperties.HEIGHT - 900) / 2.0f,
@@ -27,12 +26,13 @@ public final class GameConfiguration {
     private final Preferences controls = Gdx.app.getPreferences("TankcellGameControls");
 
     public GameConfiguration() {
+        restoreDefaultGameSettings(); //that is just for dev purposes right now
         setDefaultGameSettings();
+        restoreDefaultKeys(); //that is just for dev purposes right now
         setDefaultKeys();
     }
 
     private void setDefaultGameSettings() {
-        gameSettings.clear(); //that is just for dev purposes right now
         if (!gameSettings.contains("bulletVelocity"))
             gameSettings.putFloat("bulletVelocity", 1200f);
         if (!gameSettings.contains("deltaBulletVelocity"))
@@ -61,9 +61,22 @@ public final class GameConfiguration {
         gameSettings.flush();
     }
 
-    private void setDefaultKeys() {
-        controls.clear(); //that is just for dev purposes right now
+    public void setBulletVelocity(float value) {
+        gameSettings.putFloat("bulletVelocity", value);
+        gameSettings.flush();
+    }
 
+    public void restoreDefaultKeys() {
+        controls.clear();
+        setDefaultKeys();
+    }
+
+    public void restoreDefaultGameSettings() {
+        gameSettings.clear();
+        setDefaultGameSettings();
+    }
+
+    private void setDefaultKeys() {
         // Left player contols.
         if (!controls.contains("LEFT_PLAYER_UP"))
             controls.putInteger("LEFT_PLAYER_UP", Input.Keys.W);

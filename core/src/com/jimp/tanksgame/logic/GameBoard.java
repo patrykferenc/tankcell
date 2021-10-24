@@ -77,9 +77,9 @@ public class GameBoard {
         }
         myBomb = new Bomb();
         colonies = new ArrayList<>();
-        leftPlayerShootingTimer = new GameTimer(0.15f);
-        rightPlayerShootingTimer = new GameTimer(0.15f);
-        colonySpawningTimer = new GameTimer(1.4f);
+        leftPlayerShootingTimer = new GameTimer(0.12f);
+        rightPlayerShootingTimer = new GameTimer(0.12f);
+        colonySpawningTimer = new GameTimer(1.2f);
         colonySpawningTimer.reset();
         sizeAndSpeedTimer = new GameTimer(gameSettings.getFloat("timeToDecreaseSizeAndSpeed"));
         valueIncrementTimer = new GameTimer(gameSettings.getFloat("timeToIncreaseCellValues"));
