@@ -33,10 +33,10 @@ public abstract class Tank implements Drawable {
         playerBody.height = PLAYER_SPACE;
         playerBody.width = PLAYER_SPACE;
         if (whichPlayer.equals(LEFT))
-            playerBody.x = GAME_BOARD_LEFT_EDGE + (PLAYER_SPACE - 128f) / 2f;
+            playerBody.x = GAME_BOARD.getX() + (PLAYER_SPACE - 128f) / 2f;
         else
-            playerBody.x = GAME_BOARD_RIGHT_EDGE - PLAYER_SPACE + (PLAYER_SPACE - 128f) / 2f;
-        playerBody.y = (GAME_BOARD_UPPER_EDGE / 2.0f) - (PLAYER_SPACE / 2.0f);
+            playerBody.x = GAME_BOARD.getX() + GAME_BOARD.getWidth() - PLAYER_SPACE + (PLAYER_SPACE - 128f) / 2f;
+        playerBody.y = (GAME_BOARD.getY() + GAME_BOARD.getHeight() / 2.0f) - (PLAYER_SPACE / 2.0f);
         turretRotation = whichPlayer.equals(LEFT) ? 0.0f : 180.0f;
         shotBullets = new ArrayList<>();
         score = 0;
@@ -123,10 +123,11 @@ public abstract class Tank implements Drawable {
         } else {
             getPlayerBody().y -= MOVEMENT_SPEED * deltaTime;
         }
-        if (getPlayerBody().y < GAME_BOARD_LOWER_EDGE)
-            getPlayerBody().y = GAME_BOARD_LOWER_EDGE;
-        if (getPlayerBody().y > GAME_BOARD_UPPER_EDGE - PLAYER_SPACE)
-            getPlayerBody().y = GAME_BOARD_UPPER_EDGE - PLAYER_SPACE;
+        //If outside of the gameboard, stop the movement.
+        if (getPlayerBody().y < GAME_BOARD.getY())
+            getPlayerBody().y = GAME_BOARD.getY();
+        if (getPlayerBody().y > GAME_BOARD.getY() + GAME_BOARD.getHeight() - PLAYER_SPACE)
+            getPlayerBody().y = GAME_BOARD.getY() + GAME_BOARD.getHeight() - PLAYER_SPACE;
     }
 
     //True means up, false means down

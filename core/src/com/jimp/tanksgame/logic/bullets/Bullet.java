@@ -4,6 +4,7 @@ package com.jimp.tanksgame.logic.bullets;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.jimp.tanksgame.graphics.Resources;
 import com.jimp.tanksgame.logic.Drawable;
@@ -51,8 +52,9 @@ public class Bullet implements Drawable {
     }
 
     private boolean isOutsideGameBoard() {
-        return (bulletBody.x > GAME_BOARD_RIGHT_EDGE) || (bulletBody.x < GAME_BOARD_LEFT_EDGE) ||
-                (bulletBody.y > GAME_BOARD_UPPER_EDGE) || (bulletBody.y < GAME_BOARD_LOWER_EDGE);
+        return !Intersector.overlaps(bulletBody, GAME_BOARD);
+        //return (bulletBody.x > GAME_BOARD_RIGHT_EDGE) || (bulletBody.x < GAME_BOARD_LEFT_EDGE) ||
+        //        (bulletBody.y > GAME_BOARD_UPPER_EDGE) || (bulletBody.y < GAME_BOARD_LOWER_EDGE);
     }
 
     @Override

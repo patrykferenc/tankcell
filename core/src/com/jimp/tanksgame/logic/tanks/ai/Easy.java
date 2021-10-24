@@ -10,6 +10,7 @@ import com.jimp.tanksgame.logic.utils.GameTimer;
 import java.util.List;
 
 import static com.jimp.tanksgame.logic.tanks.ai.AI.CurrentState.*;
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.GAME_BOARD;
 
 public class Easy extends AI {
 
@@ -101,7 +102,7 @@ public class Easy extends AI {
 
     private boolean targetOutOfRange() {
         float colonyY = getCurrentTargetColony().getCentralCell().getCellRectangle().getY();
-        return colonyY < GameConfiguration.GAME_BOARD_LOWER_EDGE + 100;
+        return colonyY < GAME_BOARD.getY() + 100;
     }
 
     private void findAndSetNewTargetColony(List<Colony> colonies) {

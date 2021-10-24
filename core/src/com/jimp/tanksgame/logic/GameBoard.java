@@ -142,12 +142,12 @@ public class GameBoard {
         Rectangle testingArea = new Rectangle();
         testingArea.setSize(3 * cellSize, 3 * cellSize);
 
-        int numberOfTests = (int) ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) / testingArea.getWidth());
-        float offset = ((GAME_BOARD_WIDTH - 2 * PLAYER_SPACE) % testingArea.getWidth()) + GAME_BOARD_LEFT_EDGE + PLAYER_SPACE;
+        int numberOfTests = (int) ((GAME_BOARD.getWidth() - 2 * PLAYER_SPACE) / testingArea.getWidth());
+        float offset = ((GAME_BOARD.getWidth() - 2 * PLAYER_SPACE) % testingArea.getWidth()) + GAME_BOARD.getX() + PLAYER_SPACE;
         //generating should (maybe) be reworked but it works
         float spacing = 10f;
         for (int i = 0; i < numberOfTests; i++) {
-            testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD_UPPER_EDGE);
+            testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD.getY() + GAME_BOARD.getHeight());
             boolean isFree = true;
             outerLoop:
             for (Colony colony : colonies) {

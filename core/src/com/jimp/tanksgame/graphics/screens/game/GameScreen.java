@@ -27,7 +27,8 @@ import java.util.zip.Deflater;
 import static com.jimp.tanksgame.graphics.ScreenProperties.HEIGHT;
 import static com.jimp.tanksgame.graphics.ScreenProperties.WIDTH;
 import static com.jimp.tanksgame.logic.GameBoard.GameEndState.*;
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.GAME_BOARD;
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.PLAYER_SPACE;
 
 public class GameScreen extends MyScreen {
 
@@ -66,7 +67,7 @@ public class GameScreen extends MyScreen {
 
         myGameBoard = new GameBoard(getMyGame().getMyConfig().getGameSettings(), getMyGame().getMode());
 
-        backgroundSprites = new ArrayList<>((int) ((GAME_BOARD_WIDTH / PLAYER_SPACE) * (GAME_BOARD_HEIGHT / PLAYER_SPACE)));
+        backgroundSprites = new ArrayList<>((int) ((GAME_BOARD.getWidth() / PLAYER_SPACE) * (GAME_BOARD.getHeight() / PLAYER_SPACE)));
         prepareBackground();
 
         setPlayerControls(game);
@@ -155,24 +156,24 @@ public class GameScreen extends MyScreen {
     }
 
     private void prepareBackground() {
-        for (int j = 0; j < GAME_BOARD_WIDTH / PLAYER_SPACE; j++) {
-            for (int i = 0; i < GAME_BOARD_HEIGHT / PLAYER_SPACE; i++) {
+        for (int j = 0; j < GAME_BOARD.getWidth() / PLAYER_SPACE; j++) {
+            for (int i = 0; i < GAME_BOARD.getHeight() / PLAYER_SPACE; i++) {
                 Sprite backgroundTile = new Sprite(Resources.getInstance().getDirt());
                 backgroundTile.setSize(PLAYER_SPACE, PLAYER_SPACE);
-                backgroundTile.setPosition(GAME_BOARD_LEFT_EDGE + PLAYER_SPACE + j * PLAYER_SPACE, GAME_BOARD_LOWER_EDGE + i * PLAYER_SPACE);
+                backgroundTile.setPosition(GAME_BOARD.getX() + PLAYER_SPACE + j * PLAYER_SPACE, GAME_BOARD.getY() + i * PLAYER_SPACE);
                 backgroundSprites.add(backgroundTile);
             }
         }
-        for (int i = 0; i < GAME_BOARD_HEIGHT / PLAYER_SPACE; i++) {
+        for (int i = 0; i < GAME_BOARD.getHeight() / PLAYER_SPACE; i++) {
             Sprite backgroundTile = new Sprite(Resources.getInstance().getGrass());
             backgroundTile.setSize(PLAYER_SPACE, PLAYER_SPACE);
-            backgroundTile.setPosition(GAME_BOARD_LEFT_EDGE, GAME_BOARD_LOWER_EDGE + i * PLAYER_SPACE);
+            backgroundTile.setPosition(GAME_BOARD.getX(), GAME_BOARD.getY() + i * PLAYER_SPACE);
             backgroundSprites.add(backgroundTile);
         }
-        for (int i = 0; i < GAME_BOARD_HEIGHT / PLAYER_SPACE; i++) {
+        for (int i = 0; i < GAME_BOARD.getHeight() / PLAYER_SPACE; i++) {
             Sprite backgroundTile = new Sprite(Resources.getInstance().getGrass());
             backgroundTile.setSize(PLAYER_SPACE, PLAYER_SPACE);
-            backgroundTile.setPosition(GAME_BOARD_RIGHT_EDGE - PLAYER_SPACE, GAME_BOARD_LOWER_EDGE + i * PLAYER_SPACE);
+            backgroundTile.setPosition(GAME_BOARD.getX() + GAME_BOARD.getWidth() - PLAYER_SPACE, GAME_BOARD.getY() + i * PLAYER_SPACE);
             backgroundSprites.add(backgroundTile);
         }
     }
@@ -240,7 +241,7 @@ public class GameScreen extends MyScreen {
 
     private void takeScreenshot() {
         if (screenshotResult) {
-            Pixmap pixmap = Pixmap.createFromFrameBuffer((int) GAME_BOARD_LEFT_EDGE, (int) GAME_BOARD_LOWER_EDGE, GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT);
+            Pixmap pixmap = Pixmap.createFromFrameBuffer((int) GAME_BOARD.getX(), (int) GAME_BOARD.getY(), (int) GAME_BOARD.getWidth(), (int) GAME_BOARD.getHeight());
             PixmapIO.writePNG(Gdx.files.external("screenshot.png"), pixmap, Deflater.DEFAULT_COMPRESSION, true);
             pixmap.dispose();
         }
@@ -248,11 +249,11 @@ public class GameScreen extends MyScreen {
 
     private void drawGameUI() {
         Color uiBackgroundColor = new Color(0.1f, 0.12f, 0.1f, 1f);
-        myShapeDrawer.filledRectangle(0, 0, (WIDTH - GAME_BOARD_WIDTH) / 2f, HEIGHT, uiBackgroundColor);
-        myShapeDrawer.filledRectangle(WIDTH - ((WIDTH - GAME_BOARD_WIDTH) / 2f), 0, (WIDTH - GAME_BOARD_WIDTH) / 2f, HEIGHT, uiBackgroundColor);
-        myShapeDrawer.filledRectangle((WIDTH - GAME_BOARD_WIDTH) / 2f, 0, GAME_BOARD_WIDTH, (HEIGHT - GAME_BOARD_HEIGHT) / 2f, uiBackgroundColor);
-        myShapeDrawer.filledRectangle((WIDTH - GAME_BOARD_WIDTH) / 2f, GAME_BOARD_HEIGHT + (HEIGHT - GAME_BOARD_HEIGHT) / 2f, GAME_BOARD_WIDTH, (HEIGHT - GAME_BOARD_HEIGHT) / 2f, uiBackgroundColor);
-        myShapeDrawer.rectangle(GAME_BOARD_LEFT_EDGE - 3f, GAME_BOARD_LOWER_EDGE - 3f, GAME_BOARD_WIDTH + 6f, GAME_BOARD_HEIGHT + 6f, Color.DARK_GRAY, 6f);
+        myShapeDrawer.filledRectangle(0, 0, (WIDTH - GAME_BOARD.getWidth()) / 2f, HEIGHT, uiBackgroundColor);
+        myShapeDrawer.filledRectangle(WIDTH - ((WIDTH - GAME_BOARD.getWidth()) / 2f), 0, (WIDTH - GAME_BOARD.getWidth()) / 2f, HEIGHT, uiBackgroundColor);
+        myShapeDrawer.filledRectangle((WIDTH - GAME_BOARD.getWidth()) / 2f, 0, GAME_BOARD.getWidth(), (HEIGHT - GAME_BOARD.getHeight()) / 2f, uiBackgroundColor);
+        myShapeDrawer.filledRectangle((WIDTH - GAME_BOARD.getWidth()) / 2f, GAME_BOARD.getHeight() + (HEIGHT - GAME_BOARD.getHeight()) / 2f, GAME_BOARD.getWidth(), (HEIGHT - GAME_BOARD.getHeight()) / 2f, uiBackgroundColor);
+        myShapeDrawer.rectangle(GAME_BOARD.getX() - 3f, GAME_BOARD.getY() - 3f, GAME_BOARD.getWidth() + 6f, GAME_BOARD.getHeight() + 6f, Color.DARK_GRAY, 6f);
 
         getMyGame().getMyFont().draw(getMyGame().getMyBatch(), String.valueOf(myGameBoard.getLeftPlayer().getShotBullets().size()), 10, 900);
         getMyGame().getMyFont().draw(getMyGame().getMyBatch(), String.valueOf(myGameBoard.getRightPlayer().getShotBullets().size()), 1800, 900);
@@ -289,9 +290,9 @@ public class GameScreen extends MyScreen {
 
         if (getMyGame().getMode() == TanksGame.GameMode.MULTIPLAYER) {
             if (Gdx.input.isKeyPressed(RIGHT_TURRET_UP))
-                myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), true);
-            if (Gdx.input.isKeyPressed(RIGHT_TURRET_DOWN))
                 myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), false);
+            if (Gdx.input.isKeyPressed(RIGHT_TURRET_DOWN))
+                myGameBoard.getRightPlayer().moveTurret(Gdx.graphics.getDeltaTime(), true);
         }
     }
 

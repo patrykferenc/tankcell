@@ -3,18 +3,20 @@ package com.jimp.tanksgame.logic.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.ScreenProperties;
 
 public final class GameConfiguration {
-    public static final int GAME_BOARD_WIDTH = 1600;
-    public static final int GAME_BOARD_HEIGHT = 900;
-    public static final float GAME_BOARD_LEFT_EDGE = (ScreenProperties.WIDTH - GAME_BOARD_WIDTH) / 2.0f;
-    public static final float GAME_BOARD_RIGHT_EDGE = GAME_BOARD_LEFT_EDGE + GAME_BOARD_WIDTH;
+    //I need to rewrite this because it is a real mess...
+    public static final Rectangle GAME_BOARD = new Rectangle(
+            (ScreenProperties.WIDTH - 1600) / 2.0f,
+            (ScreenProperties.HEIGHT - 900) / 2.0f,
+            1600,
+            900
+    );
     public static final float BOMB_SIZE = 80f;
-    public static final float BOMB_X = GAME_BOARD_LEFT_EDGE + (GAME_BOARD_WIDTH / 2f) - (BOMB_SIZE / 2f);
-    public static final float GAME_BOARD_LOWER_EDGE = (ScreenProperties.HEIGHT - GAME_BOARD_HEIGHT) / 2.0f;
-    public static final float GAME_BOARD_UPPER_EDGE = GAME_BOARD_LOWER_EDGE + GAME_BOARD_HEIGHT;
-    public static final float BOMB_Y = GAME_BOARD_LOWER_EDGE;
+    public static final float BOMB_X = GAME_BOARD.getX() + (GAME_BOARD.getWidth() / 2f) - (BOMB_SIZE / 2f);
+    public static final float BOMB_Y = GAME_BOARD.getY();
     public static final float PLAYER_SPACE = 150f;
     public static final float TURRET_LENGTH = 64f;
 

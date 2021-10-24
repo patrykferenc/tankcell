@@ -9,6 +9,8 @@ import com.jimp.tanksgame.logic.utils.GameConfiguration;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.GAME_BOARD;
+
 public class Cell implements Drawable {
 
     private static final int MAX_CELL_VALUE = 9;
@@ -74,7 +76,7 @@ public class Cell implements Drawable {
 
     public void move(float deltaTime, float velocity) {
         float newY = cellRectangle.getY() - velocity * deltaTime;
-        if (newY < (GameConfiguration.GAME_BOARD_LOWER_EDGE - 3 * cellRectangle.height)) {
+        if (newY < (GAME_BOARD.getY() - 3 * cellRectangle.height)) {
             currentValue = 0;
             setCurrentLevel();
         }
