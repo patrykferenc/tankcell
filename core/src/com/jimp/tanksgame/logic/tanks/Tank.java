@@ -123,7 +123,7 @@ public abstract class Tank implements Drawable {
         } else {
             getPlayerBody().y -= MOVEMENT_SPEED * deltaTime;
         }
-        //If outside of the gameboard, stop the movement.
+        //If outside the gameboard, stop the movement.
         if (getPlayerBody().y < GAME_BOARD.getY())
             getPlayerBody().y = GAME_BOARD.getY();
         if (getPlayerBody().y > GAME_BOARD.getY() + GAME_BOARD.getHeight() - PLAYER_SPACE)

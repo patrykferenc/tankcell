@@ -54,7 +54,7 @@ public final class GameConfiguration {
         if (!gameSettings.contains("timeToIncreaseCellValues"))
             gameSettings.putFloat("timeToIncreaseCellValues", 5f);
         if (!gameSettings.contains("timeOfPlay"))
-            gameSettings.putFloat("timeOfPlay", 180f);
+            gameSettings.putFloat("timeOfPlay", 150f);
         if (!gameSettings.contains("maxBullets"))
             gameSettings.putInteger("maxBullets", 10);
 
@@ -65,6 +65,63 @@ public final class GameConfiguration {
         gameSettings.putFloat("bulletVelocity", value);
         gameSettings.flush();
     }
+
+    public void setBulletRadius(float value) {
+        gameSettings.putFloat("bulletRadius", value);
+        gameSettings.flush();
+    }
+
+    public void setCellVelocity(float value) {
+        gameSettings.putFloat("cellVelocity", value);
+        gameSettings.flush();
+    }
+
+    public void setCellSize(float value) {
+        gameSettings.putFloat("cellEdge", value);
+        gameSettings.flush();
+    }
+
+    public void setTimeOfPlay(float value) {
+        gameSettings.putFloat("timeOfPlay", value);
+        gameSettings.flush();
+    }
+
+    public void setGameBoardEasy() {
+        gameSettings.putFloat("bulletVelocity", 1600f);
+        gameSettings.putFloat("deltaBulletVelocity", 25f);
+        gameSettings.putFloat("cellVelocity", 80f);
+        gameSettings.putFloat("deltaCellVelocity", 2f);
+        gameSettings.putFloat("bulletRadius", 26f);
+        gameSettings.putFloat("deltaBulletRadius", 1f);
+        gameSettings.putFloat("cellEdge", 100f);
+        gameSettings.putFloat("deltaCellEdge", 4f);
+        gameSettings.putFloat("timeToDecreaseSizeAndSpeed", 12f);
+        gameSettings.putFloat("timeToIncreaseCellValues", 6f);
+        gameSettings.putFloat("timeOfPlay", 150f);
+        gameSettings.putInteger("maxBullets", 12);
+
+        gameSettings.flush();
+    }
+
+    public void setGameBoardNormal() {
+        restoreDefaultGameSettings();
+    }
+
+    public void setGameBoardHard() {
+        gameSettings.putFloat("bulletVelocity", 800f);
+        gameSettings.putFloat("deltaBulletVelocity", 50f);
+        gameSettings.putFloat("cellVelocity", 100f);
+        gameSettings.putFloat("deltaCellVelocity", 3f);
+        gameSettings.putFloat("bulletRadius", 18f);
+        gameSettings.putFloat("deltaBulletRadius", 1f);
+        gameSettings.putFloat("cellEdge", 78f);
+        gameSettings.putFloat("deltaCellEdge", 4f);
+        gameSettings.putFloat("timeToDecreaseSizeAndSpeed", 9f);
+        gameSettings.putFloat("timeToIncreaseCellValues", 4.5f);
+        gameSettings.putFloat("timeOfPlay", 150f);
+        gameSettings.putInteger("maxBullets", 8);
+
+        gameSettings.flush();    }
 
     public void restoreDefaultKeys() {
         controls.clear();

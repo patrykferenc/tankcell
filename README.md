@@ -9,5 +9,5 @@ TBD
 
 ### Assets
 
-Are assets except for buttons are original and you are free to use them for non-commercial projects. Button textures are
+Are assets except for buttons are original, and you are free to use them for non-commercial projects. Button textures are
 provided by amazing https://kenney.nl/assets.

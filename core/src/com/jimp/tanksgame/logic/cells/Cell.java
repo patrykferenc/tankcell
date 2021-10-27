@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.jimp.tanksgame.graphics.Resources;
 import com.jimp.tanksgame.logic.Drawable;
-import com.jimp.tanksgame.logic.utils.GameConfiguration;
 
 import java.util.concurrent.ThreadLocalRandom;
 
