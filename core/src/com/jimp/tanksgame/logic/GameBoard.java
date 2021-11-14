@@ -139,13 +139,15 @@ public class GameBoard {
     private List<Vector2> findFreeSpaceForNewColony() {
         List<Vector2> possibleFreeSpacePositions = new ArrayList<>();
 
+        float spacing = 24f; // helps to spread the colonies out a little.
+
+        // this is an area that needs to be free for a colony to spawn.
         Rectangle testingArea = new Rectangle();
-        testingArea.setSize(3 * cellSize, 3 * cellSize);
+        testingArea.setSize(3 * cellSize + spacing, 3 * cellSize + spacing);
 
         int numberOfTests = (int) ((GAME_BOARD.getWidth() - 2 * PLAYER_SPACE) / testingArea.getWidth());
         float offset = ((GAME_BOARD.getWidth() - 2 * PLAYER_SPACE) % testingArea.getWidth()) + GAME_BOARD.getX() + PLAYER_SPACE;
-        //generating should (maybe) be reworked but it works
-        float spacing = 10f;
+
         for (int i = 0; i < numberOfTests; i++) {
             testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD.getY() + GAME_BOARD.getHeight());
             boolean isFree = true;
