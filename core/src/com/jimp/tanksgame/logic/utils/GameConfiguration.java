@@ -134,7 +134,7 @@ public final class GameConfiguration {
     }
 
     private void setDefaultKeys() {
-        // Left player contols.
+        // Left player controls.
         if (!controls.contains("LEFT_PLAYER_UP"))
             controls.putInteger("LEFT_PLAYER_UP", Input.Keys.W);
         if (!controls.contains("LEFT_PLAYER_DOWN"))
