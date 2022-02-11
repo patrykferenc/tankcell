@@ -22,7 +22,7 @@ public final class GameConfiguration {
     public static final int MIN_CELLS_IN_COLONY = 1;
     public static final int MAX_CELLS_IN_COLONY = 5;
 
-    private final Preferences gameSettings = Gdx.app.getPreferences("TancellGameSettings");
+    private final Preferences gameSettings = Gdx.app.getPreferences("TankcellGameSettings");
     private final Preferences controls = Gdx.app.getPreferences("TankcellGameControls");
 
     public GameConfiguration() {
@@ -121,7 +121,8 @@ public final class GameConfiguration {
         gameSettings.putFloat("timeOfPlay", 150f);
         gameSettings.putInteger("maxBullets", 8);
 
-        gameSettings.flush();    }
+        gameSettings.flush();
+    }
 
     public void restoreDefaultKeys() {
         controls.clear();
@@ -135,30 +136,26 @@ public final class GameConfiguration {
 
     private void setDefaultKeys() {
         // Left player controls.
-        if (!controls.contains("LEFT_PLAYER_UP"))
-            controls.putInteger("LEFT_PLAYER_UP", Input.Keys.W);
-        if (!controls.contains("LEFT_PLAYER_DOWN"))
-            controls.putInteger("LEFT_PLAYER_DOWN", Input.Keys.S);
-        if (!controls.contains("LEFT_TURRET_UP"))
-            controls.putInteger("LEFT_TURRET_UP", Input.Keys.A);
-        if (!controls.contains("LEFT_TURRET_DOWN"))
-            controls.putInteger("LEFT_TURRET_DOWN", Input.Keys.D);
-        if (!controls.contains("LEFT_PLAYER_SHOOT"))
-            controls.putInteger("LEFT_PLAYER_SHOOT", Input.Keys.SPACE);
+        setControlIfNeeded("LEFT_PLAYER_UP", Input.Keys.W);
+        setControlIfNeeded("LEFT_PLAYER_DOWN", Input.Keys.S);
+        setControlIfNeeded("LEFT_TURRET_UP", Input.Keys.A);
+        setControlIfNeeded("LEFT_TURRET_DOWN", Input.Keys.D);
+        setControlIfNeeded("LEFT_PLAYER_SHOOT", Input.Keys.SPACE);
 
         // Right player controls.
-        if (!controls.contains("RIGHT_PLAYER_UP"))
-            controls.putInteger("RIGHT_PLAYER_UP", Input.Keys.UP);
-        if (!controls.contains("RIGHT_PLAYER_DOWN"))
-            controls.putInteger("RIGHT_PLAYER_DOWN", Input.Keys.DOWN);
-        if (!controls.contains("RIGHT_TURRET_UP"))
-            controls.putInteger("RIGHT_TURRET_UP", Input.Keys.RIGHT);
-        if (!controls.contains("RIGHT_TURRET_DOWN"))
-            controls.putInteger("RIGHT_TURRET_DOWN", Input.Keys.LEFT);
-        if (!controls.contains("RIGHT_PLAYER_SHOOT"))
-            controls.putInteger("RIGHT_PLAYER_SHOOT", Input.Keys.SHIFT_RIGHT);
+        setControlIfNeeded("RIGHT_PLAYER_UP", Input.Keys.UP);
+        setControlIfNeeded("RIGHT_PLAYER_DOWN", Input.Keys.DOWN);
+        setControlIfNeeded("RIGHT_TURRET_UP", Input.Keys.RIGHT);
+        setControlIfNeeded("RIGHT_TURRET_DOWN", Input.Keys.LEFT);
+        setControlIfNeeded("RIGHT_PLAYER_SHOOT", Input.Keys.SHIFT_RIGHT);
 
         controls.flush();
+    }
+
+    private void setControlIfNeeded(String name, int control) {
+        if (!controls.contains(name)) {
+            controls.putInteger(name, control);
+        }
     }
 
     public Preferences getControls() {

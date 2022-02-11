@@ -4,7 +4,7 @@ import com.jimp.tanksgame.logic.cells.Colony;
 import com.jimp.tanksgame.logic.tanks.ai.*;
 import com.jimp.tanksgame.logic.utils.GameConfiguration.Difficulty;
 
-import java.util.List;
+import java.util.Map;
 
 public class ComputerTank extends Tank {
 
@@ -29,7 +29,7 @@ public class ComputerTank extends Tank {
         }
     }
 
-    public void updateState(float deltaTime, float bulletVelocity, float bulletSize, int maxBullets, List<Colony> colonies, boolean canShoot) {
+    public void updateState(float deltaTime, float bulletVelocity, float bulletSize, int maxBullets, Map<Integer, Colony> colonies, boolean canShoot) {
         switch (tankBrain.updateAndReturnState(deltaTime, colonies, this)) {
             case IDLE:
                 //wait
@@ -42,7 +42,7 @@ public class ComputerTank extends Tank {
                     shootBullet(bulletVelocity, bulletSize, maxBullets);
                 break;
             case MOVING:
-                //not sure about the future of that feature
+                //not sure about the future of that feature, brain decides where to move so?
                 break;
         }
     }

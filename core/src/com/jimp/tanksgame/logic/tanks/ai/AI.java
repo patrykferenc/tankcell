@@ -5,7 +5,7 @@ import com.jimp.tanksgame.logic.cells.Cell;
 import com.jimp.tanksgame.logic.cells.Colony;
 import com.jimp.tanksgame.logic.tanks.Tank;
 
-import java.util.List;
+import java.util.Map;
 
 import static com.jimp.tanksgame.logic.tanks.ai.AI.CurrentState.IDLE;
 
@@ -24,10 +24,7 @@ public abstract class AI {
         directionToTarget = new Vector2(1, 0);
     }
 
-    public abstract CurrentState updateAndReturnState(float deltaTime, List<Colony> colonies, Tank tank);
-
-    //this method should pick the target to shoot at
-    //protected abstract void chooseTarget(List<Colony> colonies);
+    public abstract CurrentState updateAndReturnState(float deltaTime, Map<Integer, Colony> colonies, Tank tank);
 
     public boolean isOnTarget() {
         return (tank.getTurretRotation() >= directionToTarget.angleDeg() - ANGLE_TOLERANCE) &&

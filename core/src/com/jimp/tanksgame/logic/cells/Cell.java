@@ -69,6 +69,10 @@ public class Cell implements Drawable {
         setCurrentLevel();
     }
 
+    public boolean isOnBoard() {
+        return cellRectangle.overlaps(GAME_BOARD);
+    }
+
     public boolean isAlive() {
         return (currentValue != 0);
     }

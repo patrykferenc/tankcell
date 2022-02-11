@@ -1,17 +1,16 @@
 package com.jimp.tanksgame.logic.cells;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.MAX_CELLS_IN_COLONY;
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.MIN_CELLS_IN_COLONY;
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
 
 public class Colony {
 
     private static final int[][] ADJACENT_CELLS = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     private static int numberOfColonies;
-    private final List<Cell> cells;
+    private final Map<Integer, Cell> cells;
     private final int id;
     private int totalStartingValue;
     private boolean isAlreadyDead;
@@ -19,8 +18,8 @@ public class Colony {
 
     public Colony(float cellSize, float centerX, float centerY) {
         id = ++numberOfColonies;
-        cells = new ArrayList<>(MAX_CELLS_IN_COLONY);
-        cells.add(new Cell(centerX, centerY, cellSize, ++numberOfCells));
+        cells = new TreeMap<>();
+        cells.put(++numberOfCells, new Cell(centerX, centerY, cellSize, numberOfCells));
 
         int numStartingCells = ThreadLocalRandom.current().nextInt(MIN_CELLS_IN_COLONY, MAX_CELLS_IN_COLONY);
         while (cells.size() < numStartingCells) {
@@ -29,17 +28,31 @@ public class Colony {
                     float newX = ADJACENT_CELLS[i][1] * cellSize + centerX;
                     float newY = ADJACENT_CELLS[i][0] * cellSize + centerY;
 
-                    cells.add(new Cell(newX, newY, cellSize, ++numberOfCells));
+                    cells.put(++numberOfCells, new Cell(newX, newY, cellSize, numberOfCells));
                 }
             }
         }
         totalStartingValue = 0;
-        for (Cell cell : cells) totalStartingValue += cell.getStartingValue();
+        //TODO: see if can be sped up
+        for (Cell cell : cells.values()) totalStartingValue += cell.getStartingValue();
         isAlreadyDead = false;
     }
 
     public boolean allCellsAreDead() {
-        return cells.stream().noneMatch(cell -> cell.getCurrentValue() != 0);
+        return cells.values().stream().noneMatch(cell -> cell.getCurrentValue() != 0);
+    }
+
+    public boolean canBeSafelyCleared() {
+        return allCellsAreDead() || colonyOutsideOfGameBoard();
+    }
+
+    public boolean colonyOutsideOfGameBoard() {
+        for (Cell cell : cells.values()) {
+            if (cell.getCellRectangle().getY() > (GAME_BOARD.getY() + GAME_BOARD.getHeight())
+                    || cell.getCellRectangle().overlaps(GAME_BOARD))
+                return false;
+        }
+        return true;
     }
 
     public boolean justKilled() {
@@ -55,20 +68,20 @@ public class Colony {
     }
 
     public void increaseColonyValue() {
-        for (Cell cell : cells) cell.increaseCurrentValue();
+        for (Cell cell : cells.values()) cell.increaseCurrentValue();
     }
 
     public int getTotalStartingValue() {
         return totalStartingValue;
     }
 
-    public List<Cell> getCells() {
+    public Map<Integer, Cell> getCells() {
         return cells;
     }
 
     public Cell getCentralCell() {
         Cell centralCell = null;
-        for (Cell cell : cells)
+        for (Cell cell : cells.values())
             if (cell.getId() == 1) {
                 centralCell = cell;
             }
@@ -76,7 +89,7 @@ public class Colony {
     }
 
     public void move(float deltaTime, float velocity) {
-        for (Cell cell : cells) cell.move(deltaTime, velocity);
+        for (Cell cell : cells.values()) cell.move(deltaTime, velocity);
     }
 
     public int getId() {

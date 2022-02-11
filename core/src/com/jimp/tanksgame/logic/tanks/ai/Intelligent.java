@@ -4,6 +4,7 @@ import com.jimp.tanksgame.logic.cells.Colony;
 import com.jimp.tanksgame.logic.tanks.Tank;
 
 import java.util.List;
+import java.util.Map;
 
 public class Intelligent extends AI {
 
@@ -12,7 +13,7 @@ public class Intelligent extends AI {
     }
 
     @Override
-    public CurrentState updateAndReturnState(float deltaTime, List<Colony> colonies, Tank tank) {
+    public CurrentState updateAndReturnState(float deltaTime, Map<Integer, Colony> colonies, Tank tank) {
         return CurrentState.IDLE;
     }
 

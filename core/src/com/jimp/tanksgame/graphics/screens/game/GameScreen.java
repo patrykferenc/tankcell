@@ -110,7 +110,7 @@ public class GameScreen extends MyScreen {
         Gdx.input.setInputProcessor(myInputMultiplexer);
     }
 
-    // Controls are initialised like that because perfs are long to read from every time.
+    // Controls are initialised like that because prefs take too long to read every time.
     private void setPlayerControls(TanksGame game) {
         Preferences controls = game.getMyConfig().getControls();
         LEFT_PLAYER_UP = controls.getInteger("LEFT_PLAYER_UP");

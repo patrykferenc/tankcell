@@ -17,6 +17,8 @@ import com.jimp.tanksgame.logic.utils.GameTimer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,7 @@ public class GameBoard {
 
     private final Tank leftPlayer;
     private final Tank rightPlayer;
-    private final List<Colony> colonies;
+    private final Map<Integer, Colony> colonies;
     private final Bomb myBomb;
     private final GameTimer colonySpawningTimer;
     private final GameTimer sizeAndSpeedTimer;
@@ -76,7 +78,7 @@ public class GameBoard {
                 rightPlayer = new Player(RIGHT);
         }
         myBomb = new Bomb();
-        colonies = new ArrayList<>();
+        colonies = new TreeMap<>();
         leftPlayerShootingTimer = new GameTimer(0.12f);
         rightPlayerShootingTimer = new GameTimer(0.12f);
         colonySpawningTimer = new GameTimer(1.2f);
@@ -129,9 +131,11 @@ public class GameBoard {
             List<Vector2> possibleCenterCellPoints = findFreeSpaceForNewColony();
             if (possibleCenterCellPoints.size() > 1) {
                 int i = ThreadLocalRandom.current().nextInt(0, possibleCenterCellPoints.size() - 1);
-                colonies.add(new Colony(cellSize, possibleCenterCellPoints.get(i).x, possibleCenterCellPoints.get(i).y));
+                Colony newColony = new Colony(cellSize, possibleCenterCellPoints.get(i).x, possibleCenterCellPoints.get(i).y);
+                colonies.put(newColony.getId(), newColony);
             } else if (possibleCenterCellPoints.size() == 1) {
-                colonies.add(new Colony(cellSize, possibleCenterCellPoints.get(0).x, possibleCenterCellPoints.get(0).y));
+                Colony newColony = new Colony(cellSize, possibleCenterCellPoints.get(0).x, possibleCenterCellPoints.get(0).y);
+                colonies.put(newColony.getId(), newColony);
             }
         }
     }
@@ -151,9 +155,10 @@ public class GameBoard {
         for (int i = 0; i < numberOfTests; i++) {
             testingArea.setPosition(i * testingArea.getWidth() + offset + spacing, GAME_BOARD.getY() + GAME_BOARD.getHeight());
             boolean isFree = true;
+            // TODO: CHECK IF CAN BE SIMPLIFIED
             outerLoop:
-            for (Colony colony : colonies) {
-                for (Cell cell : colony.getCells()) {
+            for (Colony colony : colonies.values()) {
+                for (Cell cell : colony.getCells().values()) {
                     if (Intersector.overlaps(testingArea, cell.getCellRectangle())) {
                         isFree = false;
                         break outerLoop;
@@ -168,7 +173,8 @@ public class GameBoard {
     }
 
     private void moveColonies() {
-        for (Colony colonyToMove : colonies) colonyToMove.move(timeSinceLastFrame, cellVelocity);
+        // TODO: CHECK IF CAN BE SPED UP
+        for (Colony colonyToMove : colonies.values()) colonyToMove.move(timeSinceLastFrame, cellVelocity);
     }
 
     private boolean checkIfHitBomb(Tank player) {
@@ -196,7 +202,7 @@ public class GameBoard {
     }
 
     private void incrementCellValues() {
-        for (Colony colony : colonies) colony.increaseColonyValue();
+        for (Colony colony : colonies.values()) colony.increaseColonyValue();
     }
 
     private void moveBullets() {
@@ -215,8 +221,8 @@ public class GameBoard {
 
     private void checkHits(Tank player) {
         for (Bullet bullet : player.getShotBullets()) {
-            for (Colony colony : colonies) {
-                colony.getCells().forEach(cell -> checkIfHitAndProcess(bullet, cell));
+            for (Colony colony : colonies.values()) {
+                colony.getCells().values().forEach(cell -> checkIfHitAndProcess(bullet, cell));
                 if (colony.justKilled()) {
                     player.increaseScoreBy(colony.getTotalStartingValue());
                     colony.makeAlreadyDead();
@@ -233,7 +239,7 @@ public class GameBoard {
     }
 
     private void cleanDeadColonies() {
-        colonies.removeIf(Colony::allCellsAreDead);
+        colonies.values().removeIf(Colony::canBeSafelyCleared);
     }
 
     private void cleanWastedBullets() {
@@ -269,7 +275,10 @@ public class GameBoard {
         myDrawables.add(rightPlayer);
         myDrawables.addAll(leftPlayer.getShotBullets());
         myDrawables.addAll(rightPlayer.getShotBullets());
-        List<Cell> cellList = colonies.stream().flatMap(colony -> colony.getCells().stream()).filter(Cell::isAlive).collect(Collectors.toList());
+
+        List<Cell> cellList = colonies.values().stream().flatMap(
+                colony -> colony.getCells().values().stream()).filter(Cell::isAlive).collect(Collectors.toList()
+        );
         myDrawables.addAll(cellList);
 
         return myDrawables;

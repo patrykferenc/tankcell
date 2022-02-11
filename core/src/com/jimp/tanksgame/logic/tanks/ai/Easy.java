@@ -7,14 +7,12 @@ import com.jimp.tanksgame.logic.tanks.Tank;
 import com.jimp.tanksgame.logic.utils.GameConfiguration;
 import com.jimp.tanksgame.logic.utils.GameTimer;
 
-import java.util.List;
+import java.util.Map;
 
 import static com.jimp.tanksgame.logic.tanks.ai.AI.CurrentState.*;
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.GAME_BOARD;
 
 public class Easy extends AI {
 
-    public static final float ANGLE_TOLERANCE = 25f;
     private final GameTimer idleTimer = new GameTimer(0.5f);
 
     public Easy(Tank tank) {
@@ -22,13 +20,16 @@ public class Easy extends AI {
     }
 
     @Override
-    public CurrentState updateAndReturnState(float deltaTime, List<Colony> colonies, Tank tank) {
+    public CurrentState updateAndReturnState(float deltaTime, Map<Integer, Colony> colonies, Tank tank) {
         setTank(tank);
+        // Idle if there are no eligible targets
         if (colonies == null || colonies.isEmpty()) {
             return IDLE;
         }
         chooseTarget(colonies);
         updateDirectionToTarget();
+        if (!isInDesiredPosition())
+            setState(MOVING);
         switch (getState()) {
             case IDLE:
                 if (idleTimer.update(deltaTime)) setState(AIMING);
@@ -41,7 +42,10 @@ public class Easy extends AI {
                     setState(AIMING);
                 break;
             case MOVING:
-                //not implemented
+                if (isInDesiredPosition())
+                    setState(IDLE);
+                else
+                    tank.move(deltaTime, false);
                 break;
         }
         return getState();
@@ -56,7 +60,7 @@ public class Easy extends AI {
         setDirectionToTarget(angle);
     }
 
-    private void chooseTarget(List<Colony> colonies) {
+    private void chooseTarget(Map<Integer, Colony> colonies) {
         if (getCurrentTargetCell() == null || getCurrentTargetColony() == null) {
             findAndSetNewTargetColony(colonies);
             findAndSetNewTargetCell();
@@ -64,52 +68,29 @@ public class Easy extends AI {
             updateCurrentCellAndTarget(colonies);
     }
 
-    private void updateCurrentCellAndTarget(List<Colony> colonies) {
-        boolean colonyStillSame = false;
-        for (Colony colonyToCheck : colonies) {
-            if (colonyToCheck.getId() == getCurrentTargetColony().getId()) {
-                colonyStillSame = true;
-                setCurrentTargetColony(colonyToCheck);
-                break;
-            }
-        }
-        if (!colonyStillSame || targetOutOfRange() || bombOnTheWay()) {
-            //System.out.println("Shieeeeet");
+    private void updateCurrentCellAndTarget(Map<Integer, Colony> colonies) {
+        Colony newTargetColony = colonies.get(getCurrentTargetColony().getId());
+
+        if (newTargetColony == null || newTargetColony.isAlreadyDead() || newTargetColony.colonyOutsideOfGameBoard()) {
             findAndSetNewTargetColony(colonies);
             findAndSetNewTargetCell();
-            return;
-        }
-        for (Cell cellToCheck : getCurrentTargetColony().getCells()) {
-            if (cellToCheck.isAlive() && cellToCheck.getId() == getCurrentTargetCell().getId()) {
-                setCurrentTargetCell(cellToCheck);
-            } else if (!cellToCheck.isAlive() && cellToCheck.getId() == getCurrentTargetCell().getId()) {
+        } else {
+            setCurrentTargetColony(newTargetColony);
+            Cell newTargetCell = getCurrentTargetColony().getCells().get(getCurrentTargetCell().getId());
+            if (newTargetCell == null || !newTargetCell.isAlive() || !newTargetCell.isOnBoard())
                 findAndSetNewTargetCell();
-                return;
-            }
+            else
+                setCurrentTargetCell(newTargetCell);
         }
-
     }
 
-    private boolean bombOnTheWay() {
-        float angle = (float) Math.toDegrees(Math.atan2(GameConfiguration.BOMB_Y - getTank().getCenterY(),
-                GameConfiguration.BOMB_X - getTank().getCenterX()));
-        if (angle < 0) {
-            angle += 360;
-        }
-        return ((angle >= getDirectionToTarget().angleDeg() - ANGLE_TOLERANCE) &&
-                (angle <= getDirectionToTarget().angleDeg() + ANGLE_TOLERANCE));
-    }
-
-    private boolean targetOutOfRange() {
-        float colonyY = getCurrentTargetColony().getCentralCell().getCellRectangle().getY();
-        return colonyY < GAME_BOARD.getY() + 100;
-    }
-
-    private void findAndSetNewTargetColony(List<Colony> colonies) {
+    private void findAndSetNewTargetColony(Map<Integer, Colony> colonies) {
         Vector2 distanceToClosestColony = new Vector2(10000, 10000); //very long vector
         Vector2 comparisonVector = new Vector2();
-        for (Colony colony : colonies) {
-            comparisonVector = colony.getCentralCell().getCellRectangle().getCenter(comparisonVector);
+
+        for (Colony colony : colonies.values()) {
+            Cell centralCell = colony.getCentralCell();
+            comparisonVector = centralCell.getCellRectangle().getCenter(comparisonVector);
             if (comparisonVector.len2() < distanceToClosestColony.len2()) {
                 distanceToClosestColony = comparisonVector;
                 setCurrentTargetColony(colony);
@@ -117,10 +98,15 @@ public class Easy extends AI {
         }
     }
 
+    private boolean isInDesiredPosition() {
+        return getTank().getCenterY() < GameConfiguration.GAME_BOARD.getY() + getTank().getPlayerBody().getHeight() / 2f + 1f;
+    }
+
     private void findAndSetNewTargetCell() {
         Vector2 distanceToClosestCell = new Vector2(10000, 10000); //very long vector
         Vector2 comparisonVector = new Vector2();
-        for (Cell cell : getCurrentTargetColony().getCells()) {
+
+        for (Cell cell : getCurrentTargetColony().getCells().values()) {
             if (cell.isAlive()) {
                 comparisonVector = cell.getCellRectangle().getCenter(comparisonVector);
                 if (comparisonVector.len2() < distanceToClosestCell.len2()) {

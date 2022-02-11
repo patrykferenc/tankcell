@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.jimp.tanksgame.graphics.Resources;
 import com.jimp.tanksgame.logic.Drawable;
 
-import static com.jimp.tanksgame.logic.utils.GameConfiguration.*;
+import static com.jimp.tanksgame.logic.utils.GameConfiguration.GAME_BOARD;
 
 
 public class Bullet implements Drawable {
